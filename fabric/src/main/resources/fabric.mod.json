@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "mead",
+  "version": "${version}",
+  "name": "Mead",
+  "description": "A XML based UI framework for Minecraft",
+  "authors": [
+    "ZedDevStuff"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/mead"
+  },
+  "license": "MIT",
+  "icon": "assets/mead/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.zeddevstuff.mead.fabric.MeadFabric"
+    ],
+    "client": [
+      "dev.zeddevstuff.mead.fabric.client.MeadFabricClient"
+    ]
+  },
+  "mixins": [
+    "mead.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
