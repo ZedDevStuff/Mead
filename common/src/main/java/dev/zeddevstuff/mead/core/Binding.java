@@ -10,6 +10,8 @@ import java.util.function.Function;
 public class Binding<T>
 {
 	private T value;
+	private Class<T> type;
+	private String targetMemberName = null;
 	private final ArrayList<IObserver<T>> observers = new ArrayList<>();
 	private static HashMap<Class<?>, HashMap<String, Function<Object, Object>>> memberGetters = null;
 	private static HashMap<Class<?>, HashMap<String, BiConsumer<Object, Object>>> memberSetters = null;
@@ -17,19 +19,38 @@ public class Binding<T>
 	public Binding(T initialValue)
 	{
 		this.value = initialValue;
+		this.type = (Class<T>) initialValue.getClass();
 		initializeMemberAccess(initialValue.getClass());
+	}
+	public Binding(T initialValue, String targetMemberName)
+	{
+		this(initialValue);
+		this.targetMemberName = targetMemberName;
 	}
 
 	/**
 	 * Returns the current value of the binding.
 	 */
-	public T get() { return value; }
+	public <T1> T1 get()
+	{
+		if(targetMemberName == null || targetMemberName.isEmpty())
+			return (T1) value;
+		else
+		{
+			if (memberGetters.get(value.getClass()).containsKey(targetMemberName)) {
+				return (T1) memberGetters.get(value.getClass()).get(targetMemberName).apply(value);
+			}
+			return null;
+		}
+	}
 
 	/**
-	 * Returns the value of a member of the bound object (field or getter method).
+	 * Returns the value of a member of the bound object (field or getter method). If the member name is null or empty, the value of the binding itself is returned.
 	 */
 	public Optional<Object> getMember(String memberName)
 	{
+		if(memberName == null || memberName.isEmpty())
+			return Optional.of(value);
 		if (memberGetters.get(value.getClass()).containsKey(memberName)) {
 			return Optional.of(memberGetters.get(value.getClass()).get(memberName).apply(value));
 		}
@@ -39,19 +60,32 @@ public class Binding<T>
 	 * Sets the value of the binding and notifies all observers.
 	 * If the new value is the same as the current value, no notification is sent.
 	 */
-	public void set(T newValue)
+	public boolean set(Object newValue)
 	{
-		if (!value.equals(newValue)) {
-			value = newValue;
-			notifyObservers();
+		if(targetMemberName == null || targetMemberName.isEmpty())
+		{
+			if (!value.equals(newValue))
+			{
+				value = (T) newValue;
+				notifyObservers();
+				return true;
+			}
+			else
+				return false;
+		}
+		else
+		{
+			return setMember(targetMemberName, newValue);
 		}
 	}
 	/**
-	 * Sets the value of a member of the bound object (field or setter method).
+	 * Sets the value of a member of the bound object (field or setter method). If the member name is null or empty, the value of the binding itself is set.
 	 * @return true if the member was set successfully, false if no setter exists for the member or other error occurs.
 	 */
 	public boolean setMember(String memberName, Object newValue)
 	{
+		if(memberName == null || memberName.isEmpty() && newValue.getClass() == type)
+			set((T) newValue);
 		if (memberSetters.get(value.getClass()).containsKey(memberName)) {
 			memberSetters.get(value.getClass()).get(memberName).accept(value, newValue);
 			notifyObservers();
