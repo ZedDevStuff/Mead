@@ -3,6 +3,14 @@
     <Button width="200">I'm another button </Button>
     <Button action="sayHello">Click me</Button>
     <Rect width="10" height="10" backgroundColor="#ffdd00"/>
-    <Rect width="50" height="50" border="2"
-          backgroundColor="#ff0077" borderColor="#ffffff"/>
+    <Rect width="50" height="50" border="2" margin="10,0,0,0"
+          backgroundColor="#ff0077" borderColor="#ffffff">
+        <Rect width="42" height="42" border="2" margin="2"
+              backgroundColor="#ffdd00" borderColor="#ffffff">
+            <Rect width="34" height="34" border="2" margin="2"
+                  backgroundColor="#00ddff" borderColor="#ffffff">
+
+            </Rect>
+        </Rect>
+    </Rect>
 </Mead>
