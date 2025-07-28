@@ -10,6 +10,9 @@ import java.util.concurrent.Callable;
 
 public class RectElement extends MeadElement implements IHasColorProperties
 {
+	@Override
+	public String getTagName() { return "rect"; }
+
 	protected final ColorProperties colorProps = new ColorProperties();
 	public ColorProperties colorProps() { return colorProps; }
 	public RectElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)

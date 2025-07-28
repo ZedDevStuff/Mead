@@ -13,4 +13,7 @@
             </Rect>
         </Rect>
     </Rect>
+    <Rect width="100" height="100">
+        <Text>Text inside a rectangle</Text>
+    </Rect>
 </Mead>

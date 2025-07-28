@@ -2,6 +2,7 @@ package dev.zeddevstuff.mead.minecraft;
 
 import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.parsing.MeadParser;
+import dev.zeddevstuff.mead.parsing.MeadStyleSheetsParser;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -36,6 +37,17 @@ public class MeadFileScreen extends BaseMeadScreen
 			LOGGER.error("Mead file does not exist: {}", screen);
 		}
 		end = System.nanoTime();
+		var style = new MeadStyleSheetsParser().parse("""
+			rect {
+				backgroundColor: #000000;
+				border: 10px;
+				left: 0px;
+				flexBasis: 10.0;
+			}
+			""");
+		style.ifPresent(s -> {
+			s.applyToTree(this.dom.getRoot());
+		});
 		LOGGER.info("Created MeadFileScreen from file '" + screen + "' in " + getCreationTimeMillis() + "ms");
 	}
 

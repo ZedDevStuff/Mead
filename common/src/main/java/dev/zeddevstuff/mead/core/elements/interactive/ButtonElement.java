@@ -12,6 +12,8 @@ import java.util.concurrent.Callable;
 
 public class ButtonElement extends MeadElement implements IHasTextProperties
 {
+	@Override
+	public String getTagName() { return "button"; }
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 	public Callable<?> onClick = () -> null;

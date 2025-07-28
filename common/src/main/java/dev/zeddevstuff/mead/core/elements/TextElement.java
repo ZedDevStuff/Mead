@@ -14,6 +14,9 @@ import java.util.concurrent.Callable;
 
 public class TextElement extends MeadElement implements IHasColorProperties, IHasTextProperties
 {
+	@Override
+	public String getTagName() { return "text"; }
+
 	protected final ColorProperties colorProps = new ColorProperties();
 	public ColorProperties colorProps() { return colorProps; }
 	protected final TextProperties textProps = new TextProperties();

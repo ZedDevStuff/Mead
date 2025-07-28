@@ -12,6 +12,8 @@ public interface IHasTextProperties
 	{
 		private final Binding<Component> text = new Binding<>(Component.empty());
 		public Binding<Component> text() { return text; }
+		private final Binding<Integer> textSize = new Binding<>(12);
+		public Binding<Integer> textSize() { return textSize; }
 		private final Binding<Boolean> localized = new Binding<>(false);
 		public Binding<Boolean> localized() { return localized; }
 		private final Binding<Integer> textColor = new Binding<>(0xFFFFFF);

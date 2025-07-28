@@ -25,6 +25,8 @@ public abstract class MeadElement
 	protected YogaNode yogaNode = new YogaNode();
 	public YogaNode getNode() { return yogaNode; }
 
+	public abstract String getTagName();
+
 	protected MeadElement parent;
 	public MeadElement getParent() { return parent; }
 	public void setParent(MeadElement parent)
@@ -55,6 +57,19 @@ public abstract class MeadElement
 	{
 		yogaNode.removeChild(child.yogaNode);
 		children.remove(child);
+	}
+
+	private List<String> styles = new ArrayList<>();
+	public List<String> getStyles() { return styles; }
+	public void setStyles(List<String> styles)
+	{
+		this.styles.clear();
+		if(styles != null)
+			this.styles.addAll(styles);
+	}
+	public boolean hasStyle(String style)
+	{
+		return styles.contains(style);
 	}
 
 	public MeadElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
@@ -151,22 +166,6 @@ public abstract class MeadElement
 		NullUtils.ifNotNull(attributes.get("display"), value -> {
 			element.yogaNode.setDisplay(IStringParser.YOGA_DISPLAY_PARSER.parse(value));
 		});
-	}
-
-	private static final HashMap<String, MeadParser.IMeadElementFactory> elementFactories = new HashMap<>();
-	public static HashMap<String, MeadParser.IMeadElementFactory> getDefaultElements()
-	{
-		if (elementFactories.isEmpty())
-		{
-			elementFactories.put("Mead", Element::new);
-			elementFactories.put("Rect", RectElement::new);
-			elementFactories.put("Text", TextElement::new);
-
-			elementFactories.put("Button", ButtonElement::new);
-
-			elementFactories.put("If", IfElement::new);
-		}
-		return elementFactories;
 	}
 
 	// region Layout data

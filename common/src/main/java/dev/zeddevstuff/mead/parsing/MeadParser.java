@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.parsing;
 
 import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.Registries;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import org.appliedenergistics.yoga.YogaFlexDirection;
@@ -27,19 +28,19 @@ public class MeadParser
 
 	public MeadParser()
 	{
-		this.elements = MeadElement.getDefaultElements();
+		this.elements = Registries.elementFactories.toMap();
 		initializeDocumentBuilder();
 	}
 	public MeadParser(HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		this.elements = MeadElement.getDefaultElements();
+		this.elements = Registries.elementFactories.toMap();
 		this.variables = variables;
 		this.actions = actions;
 		initializeDocumentBuilder();
 	}
 	public MeadParser(HashMap<String, IMeadElementFactory> elements, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		this.elements = MeadElement.getDefaultElements();
+		this.elements = Registries.elementFactories.toMap();
 		for(String key : elements.keySet())
 		{
 			var res = this.elements.putIfAbsent(key, elements.get(key));

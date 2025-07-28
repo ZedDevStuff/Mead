@@ -13,6 +13,16 @@ public class Binding<T>
 	private Class<T> type;
 	private String targetMemberName = null;
 	private final ArrayList<IObserver<T>> observers = new ArrayList<>();
+	private boolean wasModifiedOnceAfterCreation = false;
+	public boolean wasModifiedOnceAfterCreation()
+	{
+		return wasModifiedOnceAfterCreation;
+	}
+	private boolean wasModifiedTwiceAfterCreation = false;
+	public boolean wasModifiedTwiceAfterCreation()
+	{
+		return wasModifiedTwiceAfterCreation;
+	}
 	private static HashMap<Class<?>, HashMap<String, Function<Object, Object>>> memberGetters = null;
 	private static HashMap<Class<?>, HashMap<String, BiConsumer<Object, Object>>> memberSetters = null;
 
@@ -66,6 +76,10 @@ public class Binding<T>
 		{
 			if (!value.equals(newValue))
 			{
+				if(wasModifiedOnceAfterCreation && !wasModifiedTwiceAfterCreation)
+					wasModifiedTwiceAfterCreation = true;
+				if(!wasModifiedOnceAfterCreation) wasModifiedOnceAfterCreation = true;
+
 				value = (T) newValue;
 				notifyObservers();
 				return true;

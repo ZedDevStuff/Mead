@@ -11,6 +11,10 @@ import java.util.concurrent.Callable;
 public class IfElement extends MeadElement
 {
 	private Binding<Boolean> condition = new Binding<>(true); // Default to true if no condition is provided
+
+	@Override
+	public String getTagName() { return "if"; }
+	@SuppressWarnings("unchecked")
 	public IfElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
 		super(attributes, variables, actions);
@@ -35,14 +39,6 @@ public class IfElement extends MeadElement
 
 	private void valueChanged(Boolean value)
 	{
-		if(value)
-		{
-
-		}
-		else
-		{
-
-		}
 	}
 
 	@Override
