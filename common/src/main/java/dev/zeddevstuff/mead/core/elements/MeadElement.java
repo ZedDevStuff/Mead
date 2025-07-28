@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.core.elements;
 
+import dev.zeddevstuff.mead.core.MeadDOM;
 import dev.zeddevstuff.mead.core.elements.flow.IfElement;
 import dev.zeddevstuff.mead.core.elements.interactive.ButtonElement;
 import dev.zeddevstuff.mead.core.Binding;
@@ -23,10 +24,6 @@ public abstract class MeadElement
 {
 	protected YogaNode yogaNode = new YogaNode();
 	public YogaNode getNode() { return yogaNode; }
-	public LayoutResults getLayout()
-	{
-		return yogaNode.getLayout();
-	}
 
 	protected MeadElement parent;
 	public MeadElement getParent() { return parent; }
@@ -60,93 +57,6 @@ public abstract class MeadElement
 		children.remove(child);
 	}
 
-	/**
-	 * Returns the X position of the element.
-	 * @return
-	 */
-	public int getX()
-	{
-		int x = (int) (yogaNode.getLayoutX());
-		if (parent != null)
-			x += parent.getX();
-		return x;
-	}
-	/**
-	 * Returns the X position of the element including borders.
-	 * @return
-	 */
-	public int getTrueX()
-	{
-		int x = (int) (yogaNode.getLayoutX());
-		x += (int) yogaNode.getLayoutBorder(YogaEdge.LEFT);
-		if (parent != null)
-			x += parent.getX();
-		return x;
-	}
-	/**
-	 * Returns the Y position of the element.
-	 * @return
-	 */
-	public int getY()
-	{
-		int y = (int) (yogaNode.getLayoutY());
-		if (parent != null)
-			y += parent.getY();
-		return y;
-	}
-
-	/**
-	 * Returns the Y position of the element including borders.
-	 * @return
-	 */
-	public int getTrueY()
-	{
-		int y = (int) (yogaNode.getLayoutY());
-		y += (int) yogaNode.getLayoutBorder(YogaEdge.TOP);
-		if (parent != null)
-			y += parent.getY();
-		return y;
-	}
-	/**
-	 * Returns the width of the element.
-	 * @return
-	 */
-	public int getWidth()
-	{
-		return (int) (yogaNode.getLayoutWidth());
-	}
-
-	/**
-	 * Returns the width of the element including borders.
-	 * @return
-	 */
-	public int getTrueWidth()
-	{
-		int width = (int) (yogaNode.getLayoutWidth());
-		width += (int) yogaNode.getLayoutBorder(YogaEdge.LEFT);
-		width += (int) yogaNode.getLayoutBorder(YogaEdge.RIGHT);
-		return width;
-	}
-	/**
-	 * Returns the height of the element.
-	 * @return
-	 */
-	public int getHeight()
-	{
-		return (int) (yogaNode.getLayoutHeight());
-	}
-	/**
-	 * Returns the height of the element including borders.
-	 * @return
-	 */
-	public int getHeightWithBorders()
-	{
-		int height = (int) (yogaNode.getLayoutHeight());
-		height += (int) yogaNode.getLayoutBorder(YogaEdge.TOP);
-		height += (int) yogaNode.getLayoutBorder(YogaEdge.BOTTOM);
-		return height;
-	}
-
 	public MeadElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
 		applyLayoutProperties(this, sanitizeAttributes(attributes));
@@ -154,7 +64,6 @@ public abstract class MeadElement
 
 	/**
 	 * Override this method to sanitize layout related attributes before applying them to the element.
-	 * @param attributes
 	 * @return A sanitized map of attributes. If the input is null, an empty map is returned.
 	 */
 	public HashMap<String, String> sanitizeAttributes(HashMap<String, String> attributes)
@@ -169,6 +78,10 @@ public abstract class MeadElement
 	 * Use this as a cache
 	 */
 	protected AbstractWidget widget;
+
+	/**
+	 * Returns the widget associated with this element. Should always return {@link MeadElement#widget} unless absolutely necessary and aware of what you're doing.
+	 */
 	public AbstractWidget getWidget() { return widget; }
 
 	public static void applyLayoutProperties(MeadElement element, HashMap<String, String> attributes)
@@ -252,10 +165,95 @@ public abstract class MeadElement
 			elementFactories.put("Button", ButtonElement::new);
 
 			elementFactories.put("If", IfElement::new);
-			//elementFactories.put("image", ImageElement::new);
-			//elementFactories.put("button", ButtonElement::new);
-			// Add more default elements as needed
 		}
 		return elementFactories;
 	}
+
+	// region Layout data
+	private ComputedLayoutData computedLayoutData = new ComputedLayoutData(this);
+
+	/**
+	 * Returns the computed layout data for this element. Note that this only gets calculated either when part of a {@link MeadDOM} or when {@link #calculateLayout()} is called on the root element.
+	 */
+	public ComputedLayoutData getLayout() { return computedLayoutData; }
+	public void calculateLayout()
+	{
+		boolean isRoot = parent == null;
+		if(isRoot && yogaNode.isDirty())
+			yogaNode.calculateLayout(yogaNode.getWidth().value, yogaNode.getHeight().value);
+		if(yogaNode.hasNewLayout())
+		{
+			computedLayoutData = new ComputedLayoutData(this);
+			yogaNode.markLayoutSeen();
+			yogaNode.setDirty(false);
+		}
+		for (var child : children)
+		{
+			child.calculateLayout();
+		}
+	}
+
+	public static class ComputedLayoutData
+	{
+		public final int x;
+		public final int innerX;
+		public final int y;
+		public final int innerY;
+		public final int width;
+		public final int innerWidth;
+		public final int height;
+		public final int innerHeight;
+
+		public ComputedLayoutData(MeadElement element)
+		{
+			this.x = calculateX(element);
+			this.innerX = calculateInnerX(element);
+			this.y = calculateY(element);
+			this.innerY = calculateInnerY(element);
+			this.width = calculateWidth(element);
+			this.innerWidth = calculateInnerWidth(element);
+			this.height = calculateHeight(element);
+			this.innerHeight = calculateInnerHeight(element);
+		}
+
+		private int calculateX(MeadElement element)
+		{
+			int x = (int) (element.yogaNode.getLayoutX());
+			if (element.parent != null)
+				x += element.parent.getLayout().x;
+			return x;
+		}
+		private int calculateY(MeadElement element)
+		{
+			int y = (int) (element.yogaNode.getLayoutY());
+			if (element.parent != null)
+				y += element.parent.getLayout().y;
+			return y;
+		}
+		private int calculateInnerX(MeadElement element)
+		{
+			return x + (int) element.yogaNode.getLayoutBorder(YogaEdge.LEFT);
+		}
+		private int calculateInnerY(MeadElement element)
+		{
+			return y + (int) element.yogaNode.getLayoutBorder(YogaEdge.TOP);
+		}
+		private int calculateWidth(MeadElement element)
+		{
+			return (int) (element.yogaNode.getLayoutWidth() + element.yogaNode.getLayoutBorder(YogaEdge.LEFT) + element.yogaNode.getLayoutBorder(YogaEdge.RIGHT));
+		}
+		private int calculateHeight(MeadElement element)
+		{
+			return (int) (element.yogaNode.getLayoutHeight() + element.yogaNode.getLayoutBorder(YogaEdge.TOP) + element.yogaNode.getLayoutBorder(YogaEdge.BOTTOM));
+		}
+		private int calculateInnerWidth(MeadElement element)
+		{
+			return (int) (element.yogaNode.getLayoutWidth());
+		}
+		private int calculateInnerHeight(MeadElement element)
+		{
+			return (int) (element.yogaNode.getLayoutHeight());
+		}
+	}
+	// endregion Layout data
 }

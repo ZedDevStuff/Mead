@@ -1,6 +1,6 @@
 <Mead>
     <Button>I'm a button ?</Button>
-    <Button width="200">I'm another button </Button>
+    <Button width="50%">I'm another button </Button>
     <Button action="sayHello">Click me</Button>
     <Rect width="10" height="10" backgroundColor="#ffdd00"/>
     <Rect width="50" height="50" border="2" margin="10,0,0,0"

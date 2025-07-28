@@ -11,8 +11,10 @@ public interface IHasColorProperties
 
 	public class ColorProperties
 	{
-		public Binding<Integer> backgroundColor = new Binding<>(0xFFFFFFFF);
-		public Binding<Integer> borderColor = new Binding<>(0xFF000000);
+		private final Binding<Integer> backgroundColor = new Binding<>(0xFFFFFFFF);
+		public Binding<Integer> backgroundColor() { return backgroundColor; }
+		private final Binding<Integer> borderColor = new Binding<>(0xFF000000);
+		public Binding<Integer> borderColor() { return borderColor; }
 	}
 
 	static void applyAttributes(IHasColorProperties element, HashMap<String, String> attributes)

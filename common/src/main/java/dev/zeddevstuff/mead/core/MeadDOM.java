@@ -35,9 +35,7 @@ public class MeadDOM
 	public void calculateLayout()
 	{
 		if (root != null)
-		{
-			root.getNode().calculateLayout(width, height);
-		}
+			root.calculateLayout();
 	}
 
 	public ArrayList<MeadElement> getAllElements()

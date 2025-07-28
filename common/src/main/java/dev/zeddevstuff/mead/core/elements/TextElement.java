@@ -26,16 +26,16 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 		if(attributes == null)
 			return;
 		NullUtils.ifNotNull(attributes.get("localized"), localized -> {
-			this.textProps.localized.set(Boolean.parseBoolean(localized));
+			this.textProps.localized().set(Boolean.parseBoolean(localized));
 		});
 		NullUtils.ifNotNull(attributes.get("text"), text -> {
-			if(this.textProps.localized.get())
-				this.textProps.text.set(Component.translatable(text));
+			if(this.textProps.localized().get())
+				this.textProps.text().set(Component.translatable(text));
 			else
-				this.textProps.text.set(Component.literal(text));
+				this.textProps.text().set(Component.literal(text));
 		});
 		NullUtils.ifNotNull(attributes.get("color"), color -> {
-			this.textProps.textColor.set(IStringParser.HEX_COLOR_PARSER.parse(color));
+			this.textProps.textColor().set(IStringParser.HEX_COLOR_PARSER.parse(color));
 		});
 		textContent.addObserver(this::updateText);
 		if(getNode().getLayoutWidth() == 0 || Float.isNaN(getNode().getLayoutWidth()))
@@ -47,9 +47,9 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 
 	private void updateText(String newText)
 	{
-		if(this.textProps.localized.get())
-			this.textProps.text.set(Component.translatable(newText));
+		if(this.textProps.localized().get())
+			this.textProps.text().set(Component.translatable(newText));
 		else
-			this.textProps.text.set(Component.literal(newText));
+			this.textProps.text().set(Component.literal(newText));
 	}
 }

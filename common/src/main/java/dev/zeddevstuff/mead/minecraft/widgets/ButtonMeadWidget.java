@@ -56,9 +56,9 @@ public class ButtonMeadWidget extends BasicMeadWidget
 	{
 		if(!(meadElement instanceof ButtonElement buttonElement))
 			return;
-		this.setMessage(buttonElement.textProps().text.get());
-		this.setPosition(buttonElement.getX(), buttonElement.getY());
-		this.setSize(buttonElement.getWidth(), buttonElement.getHeight());
+		this.setMessage(buttonElement.textProps().text().get());
+		this.setPosition(buttonElement.getLayout().x, buttonElement.getLayout().y);
+		this.setSize(buttonElement.getLayout().width, buttonElement.getLayout().height);
 		Minecraft minecraft = Minecraft.getInstance();
 		guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();

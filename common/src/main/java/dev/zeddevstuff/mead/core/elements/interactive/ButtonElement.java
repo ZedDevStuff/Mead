@@ -43,9 +43,9 @@ public class ButtonElement extends MeadElement implements IHasTextProperties
 
 	private void updateText(String newText)
 	{
-		if(this.textProps.localized.get())
-			this.textProps.text.set(Component.translatable(newText));
+		if(this.textProps.localized().get())
+			this.textProps.text().set(Component.translatable(newText));
 		else
-			this.textProps.text.set(Component.literal(newText));
+			this.textProps.text().set(Component.literal(newText));
 	}
 }

@@ -10,13 +10,19 @@ public interface IHasTextProperties
 	TextProperties textProps();
 	public class TextProperties
 	{
-		public Binding<Component> text = new Binding<>(Component.empty());
-		public Binding<Boolean> localized = new Binding<>(false);
-		public Binding<Integer> textColor = new Binding<>(0xFFFFFF);
-		public Binding<Integer> textShadowColor = new Binding<>(0x000000);
-		public Binding<Boolean> textShadow = new Binding<>(false);
-		public Binding<Integer> textScale = new Binding<>(1);
-		public Binding<Boolean> textCentered = new Binding<>(false);
+		private final Binding<Component> text = new Binding<>(Component.empty());
+		public Binding<Component> text() { return text; }
+		private final Binding<Boolean> localized = new Binding<>(false);
+		public Binding<Boolean> localized() { return localized; }
+		private final Binding<Integer> textColor = new Binding<>(0xFFFFFF);
+		public Binding<Integer> textColor() { return textColor; }
+		private final Binding<Integer> textShadowColor = new Binding<>(0x000000);
+		public Binding<Integer> textShadowColor() { return textShadowColor; }
+		private final Binding<Boolean> textShadow = new Binding<>(false);
+		public Binding<Boolean> textShadow() { return textShadow; }
+		private final Binding<Integer> textScale = new Binding<>(1);
+		public Binding<Integer> textScale() { return textScale; }
+		private final Binding<Boolean> textCentered = new Binding<>(false);
 	}
 
 	public static void applyTextProperties(IHasTextProperties element, HashMap<String, String> attributes)
