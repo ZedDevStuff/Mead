@@ -16,7 +16,6 @@ import java.util.concurrent.Callable;
 public class MeadScreen extends BaseMeadScreen
 {
 	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadScreen.class);
-	protected MeadDOM dom;
 	public MeadScreen(ResourceLocation screen, MeadContext ctx)
 	{
 		super(tryReadResource(screen), ctx, null, null);

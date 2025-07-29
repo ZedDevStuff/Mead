@@ -61,6 +61,4 @@ public class MeadDOM
 			getAllElementsRecursive(child, elements);
 		}
 	}
-
-
 }

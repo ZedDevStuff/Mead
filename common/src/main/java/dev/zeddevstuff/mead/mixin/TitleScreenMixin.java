@@ -3,18 +3,14 @@ package dev.zeddevstuff.mead.mixin;
 import dev.zeddevstuff.mead.Mead;
 import dev.zeddevstuff.mead.TestMeadScreen;
 import dev.zeddevstuff.mead.minecraft.MeadFileScreen;
-import dev.zeddevstuff.mead.minecraft.MeadScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -40,7 +36,8 @@ public abstract class TitleScreenMixin extends Screen
 						Mead.ctx(),
 						null,
 						actions));
-				} catch (IOException e)
+					//Minecraft.getInstance().setScreen(new TestMeadScreen());
+				} catch (Exception e)
 				{
 					throw new RuntimeException(e);
 				}

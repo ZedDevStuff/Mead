@@ -9,11 +9,12 @@ import dev.zeddevstuff.mead.core.elements.parsing.ImportElement;
 import dev.zeddevstuff.mead.core.elements.parsing.StyleElement;
 import dev.zeddevstuff.mead.parsing.MeadParser;
 import dev.zeddevstuff.mead.parsing.MeadStyleSheetsParser;
-import dev.zeddevstuff.mead.styling.ColorStylePropertyApplier;
-import dev.zeddevstuff.mead.styling.IMeadStylePropertyApplier;
-import dev.zeddevstuff.mead.styling.LayoutStylePropertyApplier;
-import dev.zeddevstuff.mead.styling.TextStylePropertyApplier;
+import dev.zeddevstuff.mead.styling.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -24,9 +25,12 @@ public class MeadContext
     private final UUID key = UUID.randomUUID();
     public final Registry<MeadParser.IMeadElementFactory> elementFactories = new Registry<>(key);
     public final Registry<IMeadStylePropertyApplier> stylePropertyAppliers = new Registry<>(key);
+    private final String modid;
+    private final HashMap<String, MeadStyle> styleSheets = new HashMap<>();
 
-    public MeadContext()
+    public MeadContext(String modid)
     {
+        this.modid = modid;
         registerDefaults();
     }
 
@@ -43,7 +47,7 @@ public class MeadContext
     {
         registerDefaultFactories();
         registerDefaultStylePropertyAppliers();
-
+        registerMeadStyle();
     }
     private void registerDefaultFactories()
     {
@@ -64,5 +68,13 @@ public class MeadContext
         stylePropertyAppliers.register("Layout", new LayoutStylePropertyApplier());
         stylePropertyAppliers.register("Color", new ColorStylePropertyApplier());
         stylePropertyAppliers.register("Text", new TextStylePropertyApplier());
+    }
+    private void registerMeadStyle()
+    {
+        MeadStyle style = null;
+    }
+    public void loadStyleSheets()
+    {
+        // TODO: Find a way to load all style sheets in the current mod's resources.
     }
 }

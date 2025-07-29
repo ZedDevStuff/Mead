@@ -13,7 +13,7 @@ public class Program
 	 */
 	public static void main(String[] args)
 	{
-		var ctx = new MeadContext();
+		var ctx = new MeadContext("null");
 		MeadStyleSheetsParser parser = new MeadStyleSheetsParser(ctx);
 		var el = parser.parse("""
 		btn {
