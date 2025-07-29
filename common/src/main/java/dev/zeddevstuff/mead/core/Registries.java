@@ -3,6 +3,7 @@ package dev.zeddevstuff.mead.core;
 import dev.zeddevstuff.mead.core.elements.*;
 import dev.zeddevstuff.mead.core.elements.flow.*;
 import dev.zeddevstuff.mead.core.elements.interactive.*;
+import dev.zeddevstuff.mead.core.elements.parsing.*;
 import dev.zeddevstuff.mead.parsing.MeadParser;
 import dev.zeddevstuff.mead.styling.*;
 
@@ -23,6 +24,10 @@ public class Registries
 	private static void registerDefaultFactories()
 	{
 		elementFactories.register("Mead", Element::new);
+
+		elementFactories.register("Import", ImportElement::new);
+		elementFactories.register("Style", StyleElement::new);
+
 		elementFactories.register("Rect", RectElement::new);
 		elementFactories.register("Text", TextElement::new);
 

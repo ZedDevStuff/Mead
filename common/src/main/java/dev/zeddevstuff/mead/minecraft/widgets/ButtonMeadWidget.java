@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.minecraft.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.zeddevstuff.mead.core.ElementFlavor;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.core.elements.interactive.ButtonElement;
 import net.fabricmc.api.EnvType;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.navigation.CommonInputs;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.appliedenergistics.yoga.YogaBoxSizing;
 
 import java.util.function.Supplier;
 
@@ -45,9 +47,9 @@ public class ButtonMeadWidget extends BasicMeadWidget
 		{
 			buttonElement.onClick.call();
 		}
-		catch (Exception e)
+		catch (Exception ignored)
 		{
-			e.printStackTrace();
+			// I'll figure out later what to do with this
 		}
 	}
 
@@ -63,7 +65,42 @@ public class ButtonMeadWidget extends BasicMeadWidget
 		guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
-		guiGraphics.blitSprite(SPRITES.get(this.active, this.isHoveredOrFocused()), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		if(buttonElement.getFlavor().get() == ElementFlavor.VANILLA)
+		{
+			guiGraphics.blitSprite(SPRITES.get(this.active, this.isHoveredOrFocused()), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		}
+		else
+		{
+			if(buttonElement.getNode().getBoxSizing() == YogaBoxSizing.BORDER_BOX)
+			{
+				if (buttonElement.getLayout().width > 0 || buttonElement.getLayout().height > 0)
+					guiGraphics.fill(
+						buttonElement.getLayout().x, buttonElement.getLayout().y,
+						buttonElement.getLayout().x + buttonElement.getLayout().width, buttonElement.getLayout().y + buttonElement.getLayout().height,
+						buttonElement.colorProps().getBorderColor(isActive(), isHovered(), isFocused()));
+				guiGraphics.fill(
+					buttonElement.getLayout().innerX, buttonElement.getLayout().innerY,
+					buttonElement.getLayout().innerX + buttonElement.getLayout().innerWidth, buttonElement.getLayout().innerY + buttonElement.getLayout().innerHeight,
+					buttonElement.colorProps().getBackgroundColor(isActive(), isHovered(), isFocused()));
+			}
+			else
+			{
+				var x = buttonElement.getLayout().x - buttonElement.getLayout().borderLeft;
+				var y = buttonElement.getLayout().y - buttonElement.getLayout().borderTop;
+				var innerX = buttonElement.getLayout().innerX - buttonElement.getLayout().borderLeft;
+				var innerY = buttonElement.getLayout().innerY - buttonElement.getLayout().borderTop;
+				if (buttonElement.getLayout().width > 0 || buttonElement.getLayout().height > 0)
+					guiGraphics.fill(
+						x, y,
+						x + buttonElement.getLayout().width, y + buttonElement.getLayout().height,
+						buttonElement.colorProps().getBorderColor(isActive(), isHovered(), isFocused()));
+				guiGraphics.fill(
+					innerX, innerY,
+					innerX + buttonElement.getLayout().innerWidth, innerY + buttonElement.getLayout().innerHeight,
+					buttonElement.colorProps().getBackgroundColor(isActive(), isHovered(), isFocused()));
+			}
+		}
+		
 		guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int k = this.active ? 16777215 : 10526880;
 		this.renderString(guiGraphics, minecraft.font, k | Mth.ceil(this.alpha * 255.0F) << 24);
@@ -76,6 +113,12 @@ public class ButtonMeadWidget extends BasicMeadWidget
 	@Override
 	public void onClick(double d, double e) {
 		this.onPress();
+	}
+
+	@Override
+	public void onRelease(double d, double e)
+	{
+		setFocused(false);
 	}
 
 	@Override

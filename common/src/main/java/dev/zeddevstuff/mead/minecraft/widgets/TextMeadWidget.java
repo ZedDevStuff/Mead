@@ -32,15 +32,6 @@ public class TextMeadWidget extends BasicMeadWidget
 		});
 	}
 
-	public TextMeadWidget setColor(int i)
-	{
-		if(meadElement instanceof TextElement textElement)
-		{
-			textElement.textProps().textColor().set(i);
-		}
-		return this;
-	}
-
 	private TextMeadWidget horizontalAlignment(float f)
 	{
 		this.alignX = f;
@@ -73,7 +64,7 @@ public class TextMeadWidget extends BasicMeadWidget
 		int x = textElement.getLayout().innerX + Math.round(this.alignX * (float)(width - fontWidth));
 		int y = textElement.getLayout().innerY + ((int) textElement.getLayout().innerHeight - 9) / 2;
 		FormattedCharSequence formattedCharSequence = fontWidth > width ? this.clipText(component, width) : component.getVisualOrderText();
-		guiGraphics.drawString(this.font, formattedCharSequence, x, y, textElement.textProps().textColor().get());
+		guiGraphics.drawString(this.font, formattedCharSequence, x, y, textElement.colorProps().getTextColor(isActive(), isHovered(), isFocused()));
 	}
 
 	private FormattedCharSequence clipText(Component component, int i)

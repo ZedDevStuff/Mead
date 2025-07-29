@@ -2,7 +2,6 @@ package dev.zeddevstuff.mead.minecraft;
 
 import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.parsing.MeadParser;
-import dev.zeddevstuff.mead.parsing.MeadStyleSheetsParser;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -12,43 +11,28 @@ import java.util.concurrent.Callable;
 
 public class MeadFileScreen extends BaseMeadScreen
 {
-	private static Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadFileScreen.class);
-	private MeadParser parser = new MeadParser();
-	private Path screenPath;
+	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadFileScreen.class);
+	private final MeadParser parser = new MeadParser();
+	private final Path screenPath;
 
 
 	public MeadFileScreen(Path screen) throws IOException
 	{
 		super(tryReadResource(screen), null, null);
 		screenPath = screen;
-		if(screen.toFile().exists()) {
-		} else {
+		if(!screen.toFile().exists())
 			LOGGER.error("Mead file does not exist: {}", screen);
-		}
 		end = System.nanoTime();
-		LOGGER.info("Created MeadFileScreen from file '" + screen + "' in " + getCreationTimeMillis() + "ms");
+        LOGGER.info("Created MeadFileScreen from file '{}' in {}ms", screen, getCreationTimeMillis());
 	}
 	public MeadFileScreen(Path screen, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
 	{
 		super(tryReadResource(screen), variables, actions);
 		screenPath = screen;
-		if(screen.toFile().exists()) {
-		} else {
+		if(!screen.toFile().exists())
 			LOGGER.error("Mead file does not exist: {}", screen);
-		}
 		end = System.nanoTime();
-		var style = new MeadStyleSheetsParser().parse("""
-			rect {
-				backgroundColor: #000000;
-				border: 10px;
-				left: 0px;
-				flexBasis: 10.0;
-			}
-			""");
-		style.ifPresent(s -> {
-			s.applyToTree(this.dom.getRoot());
-		});
-		LOGGER.info("Created MeadFileScreen from file '" + screen + "' in " + getCreationTimeMillis() + "ms");
+        LOGGER.info("Created MeadFileScreen from file '{}' in {}ms", screen, getCreationTimeMillis());
 	}
 
 	private static String tryReadResource(Path file)

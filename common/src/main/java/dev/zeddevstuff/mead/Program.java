@@ -1,9 +1,6 @@
 package dev.zeddevstuff.mead;
 
-import dev.zeddevstuff.mead.parsing.MeadParser;
-import dev.zeddevstuff.mead.parsing.MeadStyleSheetsParser;
-
-import java.io.Console;
+import dev.zeddevstuff.mead.parsing.*;
 
 public class Program
 {

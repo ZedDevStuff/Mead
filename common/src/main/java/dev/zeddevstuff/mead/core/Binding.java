@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class Binding<T>
 {
 	private T value;
-	private Class<T> type;
+	private final Class<T> type;
 	private String targetMemberName = null;
 	private final ArrayList<IObserver<T>> observers = new ArrayList<>();
 	private boolean wasModifiedOnceAfterCreation = false;
@@ -25,7 +25,7 @@ public class Binding<T>
 	}
 	private static HashMap<Class<?>, HashMap<String, Function<Object, Object>>> memberGetters = null;
 	private static HashMap<Class<?>, HashMap<String, BiConsumer<Object, Object>>> memberSetters = null;
-
+	@SuppressWarnings("unchecked")
 	public Binding(T initialValue)
 	{
 		this.value = initialValue;
@@ -41,6 +41,7 @@ public class Binding<T>
 	/**
 	 * Returns the current value of the binding.
 	 */
+	@SuppressWarnings("unchecked")
 	public <T1> T1 get()
 	{
 		if(targetMemberName == null || targetMemberName.isEmpty())
@@ -70,11 +71,12 @@ public class Binding<T>
 	 * Sets the value of the binding and notifies all observers.
 	 * If the new value is the same as the current value, no notification is sent.
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean set(Object newValue)
 	{
 		if(targetMemberName == null || targetMemberName.isEmpty())
 		{
-			if (!value.equals(newValue))
+			if (!value.equals(newValue) && newValue.getClass() == type)
 			{
 				if(wasModifiedOnceAfterCreation && !wasModifiedTwiceAfterCreation)
 					wasModifiedTwiceAfterCreation = true;
@@ -99,7 +101,7 @@ public class Binding<T>
 	public boolean setMember(String memberName, Object newValue)
 	{
 		if(memberName == null || memberName.isEmpty() && newValue.getClass() == type)
-			set((T) newValue);
+			set( newValue);
 		if (memberSetters.get(value.getClass()).containsKey(memberName)) {
 			memberSetters.get(value.getClass()).get(memberName).accept(value, newValue);
 			notifyObservers();

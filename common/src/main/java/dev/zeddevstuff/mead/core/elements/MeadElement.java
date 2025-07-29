@@ -1,16 +1,13 @@
 package dev.zeddevstuff.mead.core.elements;
 
 import dev.zeddevstuff.mead.core.MeadDOM;
-import dev.zeddevstuff.mead.core.elements.flow.IfElement;
-import dev.zeddevstuff.mead.core.elements.interactive.ButtonElement;
 import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.interfaces.IStringParser;
-import dev.zeddevstuff.mead.parsing.MeadParser;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
+import org.appliedenergistics.yoga.YogaBoxSizing;
 import org.appliedenergistics.yoga.YogaEdge;
 import org.appliedenergistics.yoga.YogaNode;
-import org.appliedenergistics.yoga.node.LayoutResults;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +55,13 @@ public abstract class MeadElement
 		yogaNode.removeChild(child.yogaNode);
 		children.remove(child);
 	}
+	public MeadElement getRoot()
+	{
+		if(parent != null) return parent.getRoot();
+		else return this;
+	}
 
-	private List<String> styles = new ArrayList<>();
+	private final List<String> styles = new ArrayList<>();
 	public List<String> getStyles() { return styles; }
 	public void setStyles(List<String> styles)
 	{
@@ -74,7 +76,7 @@ public abstract class MeadElement
 
 	public MeadElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		applyLayoutProperties(this, sanitizeAttributes(attributes));
+		applyBaseProperties(this, sanitizeAttributes(attributes));
 	}
 
 	/**
@@ -99,10 +101,23 @@ public abstract class MeadElement
 	 */
 	public AbstractWidget getWidget() { return widget; }
 
-	public static void applyLayoutProperties(MeadElement element, HashMap<String, String> attributes)
+	public static void applyBaseProperties(MeadElement element, HashMap<String, String> attributes)
 	{
 		if (attributes == null || element == null)
 			return;
+		NullUtils.ifNotNull(attributes.get("style"), value -> {
+			String[] styles = value.split("\\s+");
+			for (String style : styles)
+				if (!style.isEmpty())
+					element.styles.add(style);
+		});
+		// This is purely for convenience
+		NullUtils.ifNotNull(attributes.get("class"), value -> {
+			String[] styles = value.split("\\s+");
+			for (String style : styles)
+				if (!style.isEmpty())
+					element.styles.add(style);
+		});
 		NullUtils.ifNotNull(attributes.get("width"), value -> {
 			element.yogaNode.setWidth(IStringParser.STYLE_SIZE_LENGTH_PARSER.parse(value));
 		});
@@ -141,6 +156,9 @@ public abstract class MeadElement
 		NullUtils.ifNotNull(attributes.get("border"), value -> {
 			for(var el : IStringParser.YOGA_BORDER_PARSER.parse(value))
 				element.yogaNode.setBorder(el.getA(), el.getB());
+		});
+		NullUtils.ifNotNull(attributes.get("boxSizing"), value -> {
+			element.yogaNode.setBoxSizing(IStringParser.YOGA_BOX_SIZING_PARSER.parse(value));
 		});
 		NullUtils.ifNotNull(attributes.get("position"), value -> {
 			element.yogaNode.setPositionType(IStringParser.YOGA_POSITION_TYPE_PARSER.parse(value));
@@ -202,6 +220,10 @@ public abstract class MeadElement
 		public final int innerWidth;
 		public final int height;
 		public final int innerHeight;
+		public final int borderLeft;
+		public final int borderTop;
+		public final int borderRight;
+		public final int borderBottom;
 
 		public ComputedLayoutData(MeadElement element)
 		{
@@ -213,6 +235,10 @@ public abstract class MeadElement
 			this.innerWidth = calculateInnerWidth(element);
 			this.height = calculateHeight(element);
 			this.innerHeight = calculateInnerHeight(element);
+			this.borderLeft = (int) element.yogaNode.getLayoutBorder(YogaEdge.LEFT);
+			this.borderTop = (int) element.yogaNode.getLayoutBorder(YogaEdge.TOP);
+			this.borderRight = (int) element.yogaNode.getLayoutBorder(YogaEdge.RIGHT);
+			this.borderBottom = (int) element.yogaNode.getLayoutBorder(YogaEdge.BOTTOM);
 		}
 
 		private int calculateX(MeadElement element)
@@ -239,19 +265,31 @@ public abstract class MeadElement
 		}
 		private int calculateWidth(MeadElement element)
 		{
-			return (int) (element.yogaNode.getLayoutWidth() + element.yogaNode.getLayoutBorder(YogaEdge.LEFT) + element.yogaNode.getLayoutBorder(YogaEdge.RIGHT));
+			if(element.yogaNode.getBoxSizing() == YogaBoxSizing.BORDER_BOX)
+				return (int) (element.yogaNode.getLayoutWidth());
+			else
+				return (int) (element.yogaNode.getLayoutWidth() + element.yogaNode.getLayoutBorder(YogaEdge.LEFT) + element.yogaNode.getLayoutBorder(YogaEdge.RIGHT));
 		}
 		private int calculateHeight(MeadElement element)
 		{
-			return (int) (element.yogaNode.getLayoutHeight() + element.yogaNode.getLayoutBorder(YogaEdge.TOP) + element.yogaNode.getLayoutBorder(YogaEdge.BOTTOM));
+			if(element.yogaNode.getBoxSizing() == YogaBoxSizing.BORDER_BOX)
+				return (int) (element.yogaNode.getLayoutHeight());
+			else
+				return (int) (element.yogaNode.getLayoutHeight() + element.yogaNode.getLayoutBorder(YogaEdge.TOP) + element.yogaNode.getLayoutBorder(YogaEdge.BOTTOM));
 		}
 		private int calculateInnerWidth(MeadElement element)
 		{
-			return (int) (element.yogaNode.getLayoutWidth());
+			if(element.yogaNode.getBoxSizing() == YogaBoxSizing.BORDER_BOX)
+				return (int) (element.yogaNode.getLayoutWidth() - element.yogaNode.getLayoutBorder(YogaEdge.LEFT) - element.yogaNode.getLayoutBorder(YogaEdge.RIGHT));
+			else
+				return (int) (element.yogaNode.getLayoutWidth());
 		}
 		private int calculateInnerHeight(MeadElement element)
 		{
-			return (int) (element.yogaNode.getLayoutHeight());
+			if(element.yogaNode.getBoxSizing() == YogaBoxSizing.BORDER_BOX)
+				return (int) (element.yogaNode.getLayoutHeight() - element.yogaNode.getLayoutBorder(YogaEdge.TOP) - element.yogaNode.getLayoutBorder(YogaEdge.BOTTOM));
+			else
+				return (int) (element.yogaNode.getLayoutHeight());
 		}
 	}
 	// endregion Layout data

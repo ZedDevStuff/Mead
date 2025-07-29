@@ -14,7 +14,7 @@ public class MeadStyleSheetsParser
 {
     private final static Pattern COMMENT_PATTERN = Pattern.compile("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/", Pattern.DOTALL);
     private final static Pattern NEWLINE_PATTERN = Pattern.compile("\\r?\\n");
-    private final static Pattern RULE_PATTERN = Pattern.compile("(?<rule>\\.?\\w+)\\s*\\{(?<content>(?:[\\r\\n]|.)*)}", Pattern.DOTALL);
+    private final static Pattern RULE_PATTERN = Pattern.compile("(?<rule>\\.?[^ \\r\\s]+)\\s*\\{(?<content>(?:[\\r\\n]|[^}]*)*)}", Pattern.DOTALL);
     public Optional<MeadStyle> parse(String styleSheet)
     {
         var cleanedStyleSheet = removeComments(styleSheet);
@@ -28,7 +28,7 @@ public class MeadStyleSheetsParser
             String[] properties = extractProperties(ruleContent);
             MeadStyleRule styleRule = new MeadStyleRule(
                 ruleName.startsWith(".") ? MeadStyleRule.TargetType.STYLE : MeadStyleRule.TargetType.TAG,
-                ruleName,
+                ruleName.startsWith(".") ? ruleName.substring(1) : ruleName,
                 Arrays.stream(properties)
                     .map(prop -> {
                         String[] parts = prop.split(":");

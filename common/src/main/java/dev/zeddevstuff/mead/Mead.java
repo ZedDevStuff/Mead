@@ -9,6 +9,5 @@ public final class Mead
 	public static void init()
 	{
 		Registries.registerDefaults();
-		// Write common init code here.
 	}
 }

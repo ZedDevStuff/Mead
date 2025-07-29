@@ -1,7 +1,5 @@
 package dev.zeddevstuff.mead.styling;
 
-import net.minecraft.util.Tuple;
-
 import java.util.List;
 
 public class MeadStyleRule

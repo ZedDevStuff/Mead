@@ -4,6 +4,8 @@ import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.core.Registries;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
+import dev.zeddevstuff.mead.core.elements.parsing.StyleElement;
+import dev.zeddevstuff.mead.utils.SingleEvent;
 import org.appliedenergistics.yoga.YogaFlexDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 public class MeadParser
@@ -25,6 +28,8 @@ public class MeadParser
 	private HashMap<String, IMeadElementFactory> elements = new HashMap<>();
 	private HashMap<String, Binding<?>> variables = new HashMap<>();
 	private HashMap<String, Callable<?>> actions = new HashMap<>();
+	private final UUID eventKey = UUID.randomUUID();
+	private final SingleEvent<Void> parsingCompleteEvent = new SingleEvent<>(eventKey);
 
 	public MeadParser()
 	{
@@ -87,7 +92,8 @@ public class MeadParser
 			MeadElement root = new Element(null, variables, actions);
 			root.getNode().setFlexDirection(YogaFlexDirection.COLUMN);
 			buildHierarchy(root, rootElement);
-			logger.debug("Parsed Mead hierarchy successfully.");
+			parsingCompleteEvent.fire(eventKey, null);
+			logger.debug("Parsed Mead hierarchy.");
 			return Optional.of(root);
 		}
 		catch (Exception ignored)
@@ -120,6 +126,7 @@ public class MeadParser
 			logger.warn("Factory for element '{}' returned null.", tagName);
 			return;
 		}
+		if(meadElement instanceof StyleElement el) parsingCompleteEvent.addListener(el::parsingComplete);
 		if(!"Mead".equals(tagName)) parent.addChild(meadElement);
 		for (int i = 0; i < element.getChildNodes().getLength(); i++)
 		{

@@ -4,6 +4,7 @@ import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.utils.NullUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MeadDOM
 {
@@ -11,7 +12,12 @@ public class MeadDOM
 	public MeadElement getRoot() { return root; }
 	public void setRoot(MeadElement root)
 	{
-		this.root = root;
+		if (this.root != null)
+		{
+			this.root = root;
+			root.getNode().setWidth(width);
+			root.getNode().setHeight(height);
+		}
 	}
 	private int width = 0;
 	private int height = 0;
@@ -38,11 +44,11 @@ public class MeadDOM
 			root.calculateLayout();
 	}
 
-	public ArrayList<MeadElement> getAllElements()
+	public List<MeadElement> getAllElements()
 	{
 		ArrayList<MeadElement> elements = new ArrayList<>();
 		getAllElementsRecursive(root, elements);
-		return elements;
+		return elements.stream().filter(el -> el.getWidget() != null).toList();
 	}
 
 	private void getAllElementsRecursive(MeadElement element, ArrayList<MeadElement> elements)

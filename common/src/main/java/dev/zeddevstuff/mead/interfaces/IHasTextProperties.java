@@ -16,10 +16,6 @@ public interface IHasTextProperties
 		public Binding<Integer> textSize() { return textSize; }
 		private final Binding<Boolean> localized = new Binding<>(false);
 		public Binding<Boolean> localized() { return localized; }
-		private final Binding<Integer> textColor = new Binding<>(0xFFFFFF);
-		public Binding<Integer> textColor() { return textColor; }
-		private final Binding<Integer> textShadowColor = new Binding<>(0x000000);
-		public Binding<Integer> textShadowColor() { return textShadowColor; }
 		private final Binding<Boolean> textShadow = new Binding<>(false);
 		public Binding<Boolean> textShadow() { return textShadow; }
 		private final Binding<Integer> textScale = new Binding<>(1);
@@ -27,7 +23,7 @@ public interface IHasTextProperties
 		private final Binding<Boolean> textCentered = new Binding<>(false);
 	}
 
-	public static void applyTextProperties(IHasTextProperties element, HashMap<String, String> attributes)
+	static void applyAttributes(IHasTextProperties element, HashMap<String, String> attributes)
 	{
 		if(attributes == null)
 			return;
@@ -40,12 +36,7 @@ public interface IHasTextProperties
 		}
 		if(attributes.containsKey("localized"))
 			element.textProps().localized.set(Boolean.parseBoolean(attributes.get("localized")));
-		if(attributes.containsKey("color"))
-			element.textProps().textColor.set(Integer.parseInt(attributes.get("color"), 16));
-		if(attributes.containsKey("shadowColor"))
-			element.textProps().textShadowColor.set(Integer.parseInt(attributes.get("shadowColor"), 16));
-		if(attributes.containsKey("shadow"))
-			element.textProps().textShadow.set(Boolean.parseBoolean(attributes.get("shadow")));
+		element.textProps().textShadow.set(Boolean.parseBoolean(attributes.get("shadow")));
 		if(attributes.containsKey("scale"))
 			element.textProps().textScale.set(Integer.parseInt(attributes.get("scale")));
 		if(attributes.containsKey("centered"))

@@ -13,20 +13,10 @@ public class TextStylePropertyApplier implements IMeadStylePropertyApplier
 		{
 			switch (property.name())
 			{
-				case "textColor" ->
-				{
-					if(el.textProps().textColor().wasModifiedOnceAfterCreation()) break;
-					el.textProps().textColor().set(IStringParser.HEX_COLOR_PARSER.parse(property.value()));
-				}
 				case "textSize" ->
 				{
 					if(el.textProps().textSize().wasModifiedOnceAfterCreation()) break;
 					el.textProps().textSize().set(IStringParser.INTEGER_PARSER.parse(property.value()));
-				}
-				case "textShadowColor" ->
-				{
-					if(el.textProps().textShadowColor().wasModifiedOnceAfterCreation()) break;
-					el.textProps().textShadowColor().set(IStringParser.HEX_COLOR_PARSER.parse(property.value()));
 				}
 				case "textShadow" ->
 				{

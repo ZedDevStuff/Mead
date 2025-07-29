@@ -28,18 +28,16 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 		yogaNode.setNodeType(YogaNodeType.TEXT);
 		if(attributes == null)
 			return;
-		NullUtils.ifNotNull(attributes.get("localized"), localized -> {
-			this.textProps.localized().set(Boolean.parseBoolean(localized));
-		});
+		NullUtils.ifNotNull(attributes.get("localized"), localized ->
+			this.textProps.localized().set(Boolean.parseBoolean(localized)));
 		NullUtils.ifNotNull(attributes.get("text"), text -> {
 			if(this.textProps.localized().get())
 				this.textProps.text().set(Component.translatable(text));
 			else
 				this.textProps.text().set(Component.literal(text));
 		});
-		NullUtils.ifNotNull(attributes.get("color"), color -> {
-			this.textProps.textColor().set(IStringParser.HEX_COLOR_PARSER.parse(color));
-		});
+		NullUtils.ifNotNull(attributes.get("color"), color ->
+			this.colorProps.textColor().set(IStringParser.COLOR_PARSER.parse(color)));
 		textContent.addObserver(this::updateText);
 		if(getNode().getLayoutWidth() == 0 || Float.isNaN(getNode().getLayoutWidth()))
 			getNode().setWidth(100);

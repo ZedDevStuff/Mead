@@ -1,19 +1,16 @@
 <Mead>
-    <Button>I'm a button ?</Button>
-    <Button width="50%">I'm another button </Button>
+    <Style>
+        button {
+            backgroundColor: #ff7700;
+            backgroundHoverColor: #ff9900;
+            backgroundActiveColor: #ff5500;
+            border: 1;
+            borderColor: #555555;
+            borderHoverColor: #ffffff;
+            borderActiveColor: rgba(100,100,100,255);
+        }
+    </Style>
+    <Button>Vanilla</Button>
+    <Button flavor="styled">Styled</Button>
     <Button action="sayHello">Click me</Button>
-    <Rect width="10" height="10" backgroundColor="#ffdd00"/>
-    <Rect width="50" height="50" border="2" margin="10,0,0,0"
-          backgroundColor="#ff0077" borderColor="#ffffff">
-        <Rect width="42" height="42" border="2" margin="2"
-              backgroundColor="#ffdd00" borderColor="#ffffff">
-            <Rect width="34" height="34" border="2" margin="2"
-                  backgroundColor="#00ddff" borderColor="#ffffff">
-
-            </Rect>
-        </Rect>
-    </Rect>
-    <Rect width="100" height="100">
-        <Text>Text inside a rectangle</Text>
-    </Rect>
 </Mead>

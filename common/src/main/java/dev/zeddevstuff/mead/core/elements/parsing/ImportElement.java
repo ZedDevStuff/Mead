@@ -13,12 +13,17 @@ public class ImportElement extends MeadElement
 	public String getTagName() { return "null"; }
 	public ImportElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		super(attributes, variables, actions);
+		super(null, null, null);
 	}
 
 	@Override
 	public AbstractWidget getWidget()
 	{
 		return null;
+	}
+
+	public void parsingComplete(Void ignored)
+	{
+
 	}
 }

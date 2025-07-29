@@ -1,14 +1,10 @@
 package dev.zeddevstuff.mead.interfaces;
 
-import dev.zeddevstuff.mead.parsing.MeadParser;
-import net.minecraft.network.chat.TextColor;
+import dev.zeddevstuff.mead.core.ElementFlavor;
 import net.minecraft.util.Tuple;
 import org.appliedenergistics.yoga.*;
 import org.appliedenergistics.yoga.style.StyleLength;
 import org.appliedenergistics.yoga.style.StyleSizeLength;
-
-import java.lang.reflect.Parameter;
-import java.util.Optional;
 
 public interface IStringParser<T>
 {
@@ -45,18 +41,12 @@ public interface IStringParser<T>
 	};
 	IStringParser<Boolean> BOOLEAN_PARSER = input -> {
 		if (input == null) return false;
-		switch (input.toLowerCase()) {
-			case "true":
-			case "yes":
-			case "1":
-				return true;
-			case "false":
-			case "no":
-			case "0":
-				return false;
-			default:
-				return false; // or throw an exception, or return a default value
-		}
+        return switch (input.toLowerCase())
+        {
+            case "true", "yes", "1" -> true;
+            case "false", "no", "0" -> false;
+            default -> false; // or throw an exception, or return a default value
+        };
 	};
 
 	// region Yoga stuff
@@ -73,9 +63,9 @@ public interface IStringParser<T>
 				return Float.parseFloat(input);
 			}
 		} catch (NumberFormatException e) {
-			return 1.0f; // Default aspect ratio
+			return 1.0f;
 		}
-		return 1.0f; // Default aspect ratio
+		return 1.0f;
 	};
 	IStringParser<YogaValue> YOGA_VALUE_PARSER = input -> {
 		try
@@ -98,6 +88,11 @@ public interface IStringParser<T>
 		{
 			return YogaValue.ZERO;
 		}
+	};
+	IStringParser<YogaBoxSizing> YOGA_BOX_SIZING_PARSER = input ->
+	{
+		if("border".equals(input)) return YogaBoxSizing.BORDER_BOX;
+		else return YogaBoxSizing.CONTENT_BOX;
 	};
 	IStringParser<YogaFlexDirection> YOGA_FLEX_DIRECTION_PARSER = input -> switch (input)
 	{
@@ -168,6 +163,7 @@ public interface IStringParser<T>
 		case "space-evenly" -> YogaJustify.SPACE_EVENLY;
 		default -> YogaJustify.FLEX_START; // Default to FLEX_START if not recognized
 	};
+	@SuppressWarnings("unchecked")
 	IStringParser<Tuple<YogaEdge, StyleLength>[]> YOGA_EDGE_LENGTH_PARSER = input -> {
 
 		String[] parts = input.split(",");
@@ -204,6 +200,7 @@ public interface IStringParser<T>
 			return new Tuple[0];
 		}
 	};
+	@SuppressWarnings("unchecked")
 	IStringParser<Tuple<YogaEdge, Float>[]> YOGA_BORDER_PARSER = input -> {
 		String[] parts = input.split(",");
 		if(parts.length == 1)
@@ -262,11 +259,27 @@ public interface IStringParser<T>
 	};
 	// endregion Yoga stuff
 
+	IStringParser<ElementFlavor> FLAVOR_PARSER = input -> {
+		if (input == null || input.isEmpty()) {
+			return ElementFlavor.VANILLA; // Default to VANILLA if input is null or empty
+		}
+		try {
+			return ElementFlavor.valueOf(input.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			return ElementFlavor.VANILLA; // Default to VANILLA if parsing fails
+		}
+	};
+
 	IStringParser<Integer> HEX_COLOR_PARSER = input -> {
 		try {
 			var sanitizedInput = input.trim().replace("#", "");
-			if( sanitizedInput.length() != 6 && sanitizedInput.length() != 8) {
+			if(sanitizedInput.length() != 3 && sanitizedInput.length() != 6 && sanitizedInput.length() != 8) {
 				return 0xFFFFFFFF; // Default to white if not a valid hex color
+			}
+			if(sanitizedInput.length() == 3) {
+				sanitizedInput = "" + sanitizedInput.charAt(0) + sanitizedInput.charAt(0) +
+						sanitizedInput.charAt(1) + sanitizedInput.charAt(1) +
+						sanitizedInput.charAt(2) + sanitizedInput.charAt(2); // Expand shorthand hex
 			}
 			if (sanitizedInput.length() == 6) {
 				sanitizedInput = "FF" + sanitizedInput; // Add alpha channel if missing
@@ -279,5 +292,56 @@ public interface IStringParser<T>
 		} catch (NumberFormatException e) {
 			return 0xFFFFFFFF; // Default to white if parsing fails
 		}
+	};
+	IStringParser<Integer> RGB_COLOR_PARSER = input -> {
+		try {
+			String[] rgbValues = input.replace("rgb(", "").replace(")", "").split(",");
+			if (rgbValues.length != 3) {
+				return 0xFFFFFFFF; // Default to white if not a valid RGB format
+			}
+			int r = Integer.parseInt(rgbValues[0].trim());
+			int g = Integer.parseInt(rgbValues[1].trim());
+			int b = Integer.parseInt(rgbValues[2].trim());
+			return (r << 16) | (g << 8) | b; // Combine RGB values into a single integer
+		} catch (NumberFormatException e) {
+			return 0xFFFFFFFF; // Default to white if parsing fails
+		}
+	};
+	IStringParser<Integer> RGBA_COLOR_PARSER = input -> {
+		try {
+			String[] rgbaValues = input.replace("rgba(", "").replace(")", "").split(",");
+			if (rgbaValues.length != 4) {
+				return 0xFFFFFFFF; // Default to white if not a valid RGBA format
+			}
+			int r = Integer.parseInt(rgbaValues[0].trim());
+			int g = Integer.parseInt(rgbaValues[1].trim());
+			int b = Integer.parseInt(rgbaValues[2].trim());
+			int a = Integer.parseInt(rgbaValues[3].trim());
+			return (a << 24) | (r << 16) | (g << 8) | b; // Combine RGBA values into a single integer
+		} catch (NumberFormatException e) {
+			return 0xFFFFFFFF; // Default to white if parsing fails
+		}
+	};
+	IStringParser<Integer> ARGB_COLOR_PARSER = input -> {
+		try {
+			String[] argbValues = input.replace("argb(", "").replace(")", "").split(",");
+			if (argbValues.length != 4) {
+				return 0xFFFFFFFF; // Default to white if not a valid ARGB format
+			}
+			int a = Integer.parseInt(argbValues[0].trim());
+			int r = Integer.parseInt(argbValues[1].trim());
+			int g = Integer.parseInt(argbValues[2].trim());
+			int b = Integer.parseInt(argbValues[3].trim());
+			return (a << 24) | (r << 16) | (g << 8) | b; // Combine ARGB values into a single integer
+		} catch (NumberFormatException e) {
+			return 0xFFFFFFFF; // Default to white if parsing fails
+		}
+	};
+	IStringParser<Integer> COLOR_PARSER = input -> {
+		if(input.startsWith("#")) return HEX_COLOR_PARSER.parse(input);
+		else if(input.startsWith("rgb(")) return RGB_COLOR_PARSER.parse(input);
+		else if(input.startsWith("rgba(")) return RGBA_COLOR_PARSER.parse(input);
+		else if(input.startsWith("argb(")) return ARGB_COLOR_PARSER.parse(input);
+		else return INTEGER_PARSER.parse(input); // Fallback to integer parsing
 	};
 }
