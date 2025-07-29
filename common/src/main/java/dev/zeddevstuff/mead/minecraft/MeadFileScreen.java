@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.minecraft;
 
 import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.parsing.MeadParser;
 import org.slf4j.Logger;
 
@@ -12,22 +13,21 @@ import java.util.concurrent.Callable;
 public class MeadFileScreen extends BaseMeadScreen
 {
 	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadFileScreen.class);
-	private final MeadParser parser = new MeadParser();
 	private final Path screenPath;
 
 
-	public MeadFileScreen(Path screen) throws IOException
+	public MeadFileScreen(Path screen, MeadContext ctx) throws IOException
 	{
-		super(tryReadResource(screen), null, null);
+		super(tryReadResource(screen), ctx, null, null);
 		screenPath = screen;
 		if(!screen.toFile().exists())
 			LOGGER.error("Mead file does not exist: {}", screen);
 		end = System.nanoTime();
         LOGGER.info("Created MeadFileScreen from file '{}' in {}ms", screen, getCreationTimeMillis());
 	}
-	public MeadFileScreen(Path screen, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
+	public MeadFileScreen(Path screen, MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
 	{
-		super(tryReadResource(screen), variables, actions);
+		super(tryReadResource(screen), ctx, variables, actions);
 		screenPath = screen;
 		if(!screen.toFile().exists())
 			LOGGER.error("Mead file does not exist: {}", screen);

@@ -12,7 +12,7 @@ public class MeadDOM
 	public MeadElement getRoot() { return root; }
 	public void setRoot(MeadElement root)
 	{
-		if (this.root != null)
+		if (root != null)
 		{
 			this.root = root;
 			root.getNode().setWidth(width);

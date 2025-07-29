@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.minecraft;
 
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
 import dev.zeddevstuff.mead.core.Binding;
 import net.minecraft.client.Minecraft;
@@ -16,14 +17,14 @@ public class MeadScreen extends BaseMeadScreen
 {
 	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadScreen.class);
 	protected MeadDOM dom;
-	public MeadScreen(ResourceLocation screen)
+	public MeadScreen(ResourceLocation screen, MeadContext ctx)
 	{
-		super(tryReadResource(screen), null, null);
+		super(tryReadResource(screen), ctx, null, null);
 	}
 
-	public MeadScreen(ResourceLocation screen, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadScreen(ResourceLocation screen, MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		super(tryReadResource(screen), variables, actions);
+		super(tryReadResource(screen), ctx, variables, actions);
 	}
 
 	@Override

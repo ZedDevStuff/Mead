@@ -29,7 +29,7 @@ public class StyleElement extends MeadElement
     public void parsingComplete(Void ignored)
     {
         if(textContent.<String>get().isBlank()) return;
-        style = new MeadStyleSheetsParser().parse(textContent.get());
+        style = getCtx().createStyleSheetsParser().parse(textContent.get());
         style.ifPresent(meadStyle -> meadStyle.applyToTree(getRoot()));
     }
 }

@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.parsing;
 
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.styling.MeadStyle;
 import dev.zeddevstuff.mead.styling.MeadStyleRule;
 import net.minecraft.util.Tuple;
@@ -15,12 +16,18 @@ public class MeadStyleSheetsParser
     private final static Pattern COMMENT_PATTERN = Pattern.compile("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/", Pattern.DOTALL);
     private final static Pattern NEWLINE_PATTERN = Pattern.compile("\\r?\\n");
     private final static Pattern RULE_PATTERN = Pattern.compile("(?<rule>\\.?[^ \\r\\s]+)\\s*\\{(?<content>(?:[\\r\\n]|[^}]*)*)}", Pattern.DOTALL);
+
+    private final MeadContext ctx;
+    public MeadStyleSheetsParser(MeadContext ctx)
+    {
+        this.ctx = ctx;
+    }
     public Optional<MeadStyle> parse(String styleSheet)
     {
         var cleanedStyleSheet = removeComments(styleSheet);
         cleanedStyleSheet = flatten(cleanedStyleSheet);
         var rules = extractRules(cleanedStyleSheet);
-        MeadStyle style = new MeadStyle();
+        MeadStyle style = new MeadStyle(ctx);
         for(var rule : rules)
         {
             String ruleName = rule.getA();

@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead;
 
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.parsing.*;
 
 public class Program
@@ -12,7 +13,8 @@ public class Program
 	 */
 	public static void main(String[] args)
 	{
-		MeadStyleSheetsParser parser = new MeadStyleSheetsParser();
+		var ctx = new MeadContext();
+		MeadStyleSheetsParser parser = new MeadStyleSheetsParser(ctx);
 		var el = parser.parse("""
 		btn {
 		    textColor: #FFFFFF;

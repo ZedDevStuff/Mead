@@ -1,12 +1,13 @@
 package dev.zeddevstuff.mead.parsing;
 
 import dev.zeddevstuff.mead.core.Binding;
-import dev.zeddevstuff.mead.core.Registries;
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.core.elements.parsing.StyleElement;
 import dev.zeddevstuff.mead.utils.SingleEvent;
 import org.appliedenergistics.yoga.YogaFlexDirection;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -23,6 +24,7 @@ import java.util.concurrent.Callable;
 public class MeadParser
 {
 	private final Logger logger = LoggerFactory.getLogger(MeadParser.class);
+	private final MeadContext ctx;
 	private DocumentBuilder documentBuilder;
 
 	private HashMap<String, IMeadElementFactory> elements = new HashMap<>();
@@ -31,21 +33,24 @@ public class MeadParser
 	private final UUID eventKey = UUID.randomUUID();
 	private final SingleEvent<Void> parsingCompleteEvent = new SingleEvent<>(eventKey);
 
-	public MeadParser()
+	public MeadParser(@NotNull MeadContext ctx)
 	{
-		this.elements = Registries.elementFactories.toMap();
+		this.ctx = ctx;
+		this.elements = ctx.elementFactories.toMap();
 		initializeDocumentBuilder();
 	}
-	public MeadParser(HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadParser(@NotNull MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		this.elements = Registries.elementFactories.toMap();
+		this.ctx = ctx;
+		this.elements = ctx.elementFactories.toMap();
 		this.variables = variables;
 		this.actions = actions;
 		initializeDocumentBuilder();
 	}
-	public MeadParser(HashMap<String, IMeadElementFactory> elements, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadParser(@NotNull MeadContext ctx, HashMap<String, IMeadElementFactory> elements, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		this.elements = Registries.elementFactories.toMap();
+		this.ctx = ctx;
+		this.elements = ctx.elementFactories.toMap();
 		for(String key : elements.keySet())
 		{
 			var res = this.elements.putIfAbsent(key, elements.get(key));
@@ -90,6 +95,7 @@ public class MeadParser
 				return Optional.of(new Element(null, variables, actions));
 			}
 			MeadElement root = new Element(null, variables, actions);
+			root.setCtx(ctx);
 			root.getNode().setFlexDirection(YogaFlexDirection.COLUMN);
 			buildHierarchy(root, rootElement);
 			parsingCompleteEvent.fire(eventKey, null);
@@ -126,6 +132,7 @@ public class MeadParser
 			logger.warn("Factory for element '{}' returned null.", tagName);
 			return;
 		}
+		meadElement.setCtx(ctx);
 		if(meadElement instanceof StyleElement el) parsingCompleteEvent.addListener(el::parsingComplete);
 		if(!"Mead".equals(tagName)) parent.addChild(meadElement);
 		for (int i = 0; i < element.getChildNodes().getLength(); i++)

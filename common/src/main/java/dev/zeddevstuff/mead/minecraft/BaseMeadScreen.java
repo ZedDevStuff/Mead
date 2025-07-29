@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.minecraft;
 
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
 import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.parsing.MeadParser;
@@ -13,21 +14,23 @@ import java.util.concurrent.Callable;
 
 public abstract class BaseMeadScreen extends Screen
 {
+	private final MeadContext ctx;
 	protected long start = 0;
 	protected long end = 0;
 	public long getCreationTime() { return end - start; }
 	public float getCreationTimeMillis() { return (float) (end - start) / 1_000_000f; }
 	protected MeadDOM dom;
-	public BaseMeadScreen(String xml, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public BaseMeadScreen(String xml, MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
 		super(Component.literal("MeadScreen"));
+		this.ctx = ctx;
 		start = System.nanoTime();
 		this.dom = new MeadDOM(null);
 		if(variables == null)
 			variables = new HashMap<>();
 		if(actions == null)
 			actions = new HashMap<>();
-		MeadParser parser = new MeadParser(variables, actions);
+		MeadParser parser = new MeadParser(ctx, variables, actions);
 		parser.parse(xml).ifPresent(dom::setRoot);
 		resize(Minecraft.getInstance(), Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 	}

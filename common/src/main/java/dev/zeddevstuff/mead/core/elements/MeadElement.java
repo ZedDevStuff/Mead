@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.core.elements;
 
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
 import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.interfaces.IStringParser;
@@ -21,6 +22,10 @@ public abstract class MeadElement
 {
 	protected YogaNode yogaNode = new YogaNode();
 	public YogaNode getNode() { return yogaNode; }
+
+	private MeadContext ctx;
+	public MeadContext getCtx() { return ctx; }
+	public void setCtx(MeadContext ctx) { this.ctx = ctx; }
 
 	public abstract String getTagName();
 

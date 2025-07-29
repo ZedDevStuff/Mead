@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.mixin;
 
+import dev.zeddevstuff.mead.Mead;
 import dev.zeddevstuff.mead.TestMeadScreen;
 import dev.zeddevstuff.mead.minecraft.MeadFileScreen;
 import dev.zeddevstuff.mead.minecraft.MeadScreen;
@@ -36,6 +37,7 @@ public abstract class TitleScreenMixin extends Screen
 					actions.put("sayHello", () -> { System.out.println("Hello from Mead!"); return null; });
 					Minecraft.getInstance().setScreen(new MeadFileScreen(
 						Path.of("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead"),
+						Mead.ctx(),
 						null,
 						actions));
 				} catch (IOException e)

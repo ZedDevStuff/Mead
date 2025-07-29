@@ -1,7 +1,8 @@
 package dev.zeddevstuff.mead.styling;
 
-import dev.zeddevstuff.mead.core.Registries;
+import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,17 +10,20 @@ import java.util.List;
 
 public class MeadStyle
 {
+	private final MeadContext ctx;
 	private final List<MeadStyleRule> rules;
 	public List<MeadStyleRule> getRules()
 	{
 		return Collections.unmodifiableList(rules);
 	}
-	public MeadStyle()
+	public MeadStyle(@NotNull MeadContext ctx)
 	{
+		this.ctx = ctx;
 		this.rules = new ArrayList<>();
 	}
-	public MeadStyle(List<MeadStyleRule> rules)
+	public MeadStyle(@NotNull MeadContext ctx, List<MeadStyleRule> rules)
 	{
+		this.ctx = ctx;
 		this.rules = new ArrayList<>(rules);
 	}
 
@@ -41,7 +45,7 @@ public class MeadStyle
 			{
 				for(var property : rule.properties)
 				{
-					Registries.stylePropertyAppliers.values()
+					ctx.stylePropertyAppliers.values()
 						.forEach(applier -> applier.applyStyleProperty(property, element));
 				}
 			}
@@ -49,7 +53,7 @@ public class MeadStyle
 			{
 				for(var property : rule.properties)
 				{
-					Registries.stylePropertyAppliers.values()
+					ctx.stylePropertyAppliers.values()
 						.forEach(applier -> applier.applyStyleProperty(property, element));
 				}
 			}
