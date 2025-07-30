@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.core;
 
+import com.mojang.logging.LogUtils;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.RectElement;
 import dev.zeddevstuff.mead.core.elements.TextElement;
@@ -11,12 +12,11 @@ import dev.zeddevstuff.mead.parsing.MeadParser;
 import dev.zeddevstuff.mead.parsing.MeadStyleSheetsParser;
 import dev.zeddevstuff.mead.styling.*;
 import dev.zeddevstuff.mead.utils.NullUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import org.slf4j.Logger;
 
 import java.io.InputStream;
-import java.security.CodeSource;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
@@ -26,23 +26,33 @@ import java.util.regex.Pattern;
  */
 public class MeadContext
 {
+    private final Logger LOGGER = LogUtils.getLogger();
     private final UUID key = UUID.randomUUID();
     public final Registry<MeadParser.IMeadElementFactory> elementFactories = new Registry<>(key);
     public final Registry<IMeadStylePropertyApplier> stylePropertyAppliers = new Registry<>(key);
     private final String modid;
     private final HashMap<String, MeadStyle> styleSheets = new HashMap<>();
+    public Optional<MeadStyle> getStyleSheet(String path)
+    {
+        return Optional.ofNullable(styleSheets.get(path));
+    }
 
+    /**
+     * Initializes the Mead context with the given mod ID.
+     * @param modid Your mod ID. Make sure it is the same as your "assets" namespace.
+     */
     public MeadContext(String modid)
     {
         this.modid = modid;
         registerDefaults();
         loadStyleSheets();
     }
-
+    private final MeadParser defaultParser = createParser();
     public MeadParser createParser()
     {
         return new MeadParser(this);
     }
+    private final MeadStyleSheetsParser defaultStyleSheetsParser = createStyleSheetsParser();
     public MeadStyleSheetsParser createStyleSheetsParser()
     {
         return new MeadStyleSheetsParser(this);
@@ -78,8 +88,8 @@ public class MeadContext
     {
         MeadStyle style = null;
     }
-    private static Pattern tempPattern = Pattern.compile(".+\\.jar");
-    public void loadStyleSheets()
+    private static final Pattern tempPattern = Pattern.compile(".+\\.jar");
+    private void loadStyleSheets()
     {
         try
         {
@@ -98,25 +108,25 @@ public class MeadContext
                                     .forEach(entry -> {
                                         try (InputStream inputStream = jarFile.getInputStream(entry))
                                         {
+                                            String relativePath = entry.getName().replace("assets/" + modid + "/ui/", "");
                                             String content = new String(inputStream.readAllBytes());
-                                            // TODO: Parse the Mead stylesheet and register it
-                                        } catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
+                                            var result = defaultStyleSheetsParser.parse(content);
+                                            result.ifPresent(style -> styleSheets.put(relativePath, style));
+                                        } catch (Exception ignored) {}
                                     });
                             }
-                            catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
+                            catch (Exception ignored) {}
                         }
                     });
                 });
         }
         catch(Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to load style sheets for mod {}", modid, e);
         }
-        System.out.println("Loading Mead stylesheets for mod: " + modid);
+        var size = styleSheets.size();
+        if(size == 1)
+            LOGGER.info("Loaded 1 stylesheet for mod {}", modid);
+        else
+            LOGGER.info("Loaded {} stylesheets for mod {}", styleSheets.size(), modid);
     }
 }

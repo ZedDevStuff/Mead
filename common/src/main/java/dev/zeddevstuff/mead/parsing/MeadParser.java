@@ -4,6 +4,7 @@ import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
+import dev.zeddevstuff.mead.core.elements.parsing.IParsingCompleteListener;
 import dev.zeddevstuff.mead.core.elements.parsing.StyleElement;
 import dev.zeddevstuff.mead.utils.SingleEvent;
 import org.appliedenergistics.yoga.YogaFlexDirection;
@@ -99,11 +100,11 @@ public class MeadParser
 			root.getNode().setFlexDirection(YogaFlexDirection.COLUMN);
 			buildHierarchy(root, rootElement);
 			parsingCompleteEvent.fire(eventKey, null);
-			logger.debug("Parsed Mead hierarchy.");
 			return Optional.of(root);
 		}
-		catch (Exception ignored)
+		catch (Exception e)
 		{
+			logger.error("Failed to parse Mead input: {}", e.getMessage());
 			return Optional.empty();
 		}
 	}
@@ -133,7 +134,7 @@ public class MeadParser
 			return;
 		}
 		meadElement.setCtx(ctx);
-		if(meadElement instanceof StyleElement el) parsingCompleteEvent.addListener(el::parsingComplete);
+		if(meadElement instanceof IParsingCompleteListener el) parsingCompleteEvent.addListener(el::parsingComplete);
 		if(!"Mead".equals(tagName)) parent.addChild(meadElement);
 		for (int i = 0; i < element.getChildNodes().getLength(); i++)
 		{

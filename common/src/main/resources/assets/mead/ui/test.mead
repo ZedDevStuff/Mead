@@ -1,16 +1,8 @@
 <Mead>
-    <Style>
-        button {
-            backgroundColor: #ff7700;
-            backgroundHoverColor: #ff9900;
-            backgroundActiveColor: #ff5500;
-            border: 1;
-            borderColor: #555555;
-            borderHoverColor: #ffffff;
-            borderActiveColor: rgba(100,100,100,255);
-        }
-    </Style>
+    <Style src="style/mead.mss" />
+    <!-- Defaults to flavor "vanilla" -->
     <Button>Vanilla</Button>
     <Button flavor="styled">Styled</Button>
     <Button action="sayHello">Click me</Button>
+    <Rect class="demoRect" width="stretch" height="40" margin="4" />
 </Mead>

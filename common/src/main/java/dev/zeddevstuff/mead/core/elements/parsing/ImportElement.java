@@ -7,7 +7,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-public class ImportElement extends MeadElement
+public class ImportElement extends MeadElement implements IParsingCompleteListener
 {
 	@Override
 	public String getTagName() { return "null"; }

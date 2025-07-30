@@ -24,14 +24,16 @@ public abstract class BaseMeadScreen extends Screen
 	{
 		super(Component.literal("MeadScreen"));
 		this.ctx = ctx;
-		start = System.nanoTime();
+
 		this.dom = new MeadDOM(null);
 		if(variables == null)
 			variables = new HashMap<>();
 		if(actions == null)
 			actions = new HashMap<>();
 		MeadParser parser = new MeadParser(ctx, variables, actions);
+		start = System.nanoTime();
 		parser.parse(xml).ifPresent(dom::setRoot);
+		end = System.nanoTime();
 		resize(Minecraft.getInstance(), Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 	}
 
