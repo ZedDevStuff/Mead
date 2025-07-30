@@ -29,11 +29,11 @@ public interface IHasColorProperties
 		private final Binding<Integer> borderDisabledColor = new Binding<>(0xFF555555);
 		public Binding<Integer> borderDisabledColor() { return borderDisabledColor; }
 
-		private final Binding<Integer> textColor = new Binding<>(0xFF000000);
+		private final Binding<Integer> textColor = new Binding<>(0xFFFFFFFF);
 		public Binding<Integer> textColor() { return textColor; }
-		private final Binding<Integer> textHoverColor = new Binding<>(0xFF000000);
+		private final Binding<Integer> textHoverColor = new Binding<>(0xFFFFFFFF);
 		public Binding<Integer> textHoverColor() { return textHoverColor; }
-		private final Binding<Integer> textActiveColor = new Binding<>(0xFF000000);
+		private final Binding<Integer> textActiveColor = new Binding<>(0xFFFFFFFF);
 		public Binding<Integer> textActiveColor() { return textActiveColor; }
 		private final Binding<Integer> textDisabledColor = new Binding<>(0xFFAAAAAA);
 		public Binding<Integer> textDisabledColor() { return textDisabledColor; }

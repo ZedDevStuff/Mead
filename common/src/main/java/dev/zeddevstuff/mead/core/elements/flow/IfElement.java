@@ -4,6 +4,7 @@ import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -15,9 +16,9 @@ public class IfElement extends MeadElement
 	@Override
 	public String getTagName() { return "if"; }
 	@SuppressWarnings("unchecked")
-	public IfElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public IfElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
-		super(attributes, variables, actions);
+		super(attributes, variables, actions, textContent);
 		NullUtils.ifNotNull(attributes.get("condition"), condition -> {
 			if(!condition.isEmpty())
 			{

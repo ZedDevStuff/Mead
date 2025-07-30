@@ -9,6 +9,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import org.appliedenergistics.yoga.YogaBoxSizing;
 import org.appliedenergistics.yoga.YogaEdge;
 import org.appliedenergistics.yoga.YogaNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,8 +80,9 @@ public abstract class MeadElement
 		return styles.contains(style);
 	}
 
-	public MeadElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
+		this.textContent.set(textContent);
 		applyBaseProperties(this, sanitizeAttributes(attributes));
 	}
 

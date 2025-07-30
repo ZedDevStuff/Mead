@@ -9,6 +9,7 @@ import dev.zeddevstuff.mead.interfaces.IHasTextProperties;
 import dev.zeddevstuff.mead.minecraft.widgets.ButtonMeadWidget;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -24,9 +25,9 @@ public class ButtonElement extends MeadElement implements IHasColorProperties, I
 	public Callable<?> onClick = () -> null;
 	private final Binding<ElementFlavor> flavor = new Binding<>(ElementFlavor.VANILLA);
 	public Binding<ElementFlavor> getFlavor() { return flavor; }
-	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
-		super(attributes, variables, actions);
+		super(attributes, variables, actions, textContent);
 		IHasColorProperties.applyAttributes(this, attributes);
 		IHasFlavorProperty.applyAttributes(this, attributes);
 		IHasTextProperties.applyAttributes(this, attributes);
@@ -38,7 +39,9 @@ public class ButtonElement extends MeadElement implements IHasColorProperties, I
 				this.onClick = action;
 			});
 		});
-		textContent.addObserver(this::updateText);
+		this.textContent.addObserver(this::updateText);
+		if(!textContent.isBlank())
+			this.updateText(textContent);
 		widget = new ButtonMeadWidget(this);
 	}
 

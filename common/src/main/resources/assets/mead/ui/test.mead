@@ -4,5 +4,5 @@
     <Button>Vanilla</Button>
     <Button flavor="styled">Styled</Button>
     <Button action="sayHello">Click me</Button>
-    <Rect class="demoRect" width="stretch" height="40" margin="4" />
+    <Text width="100" textColor="#FFAAAA">Hello</Text>
 </Mead>

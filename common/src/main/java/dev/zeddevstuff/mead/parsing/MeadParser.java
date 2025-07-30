@@ -5,7 +5,6 @@ import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.core.elements.parsing.IParsingCompleteListener;
-import dev.zeddevstuff.mead.core.elements.parsing.StyleElement;
 import dev.zeddevstuff.mead.utils.SingleEvent;
 import org.appliedenergistics.yoga.YogaFlexDirection;
 import org.jetbrains.annotations.NotNull;
@@ -93,9 +92,9 @@ public class MeadParser
 			if(!rootElement.hasChildNodes())
 			{
 				logger.warn("Root element 'Mead' is empty.");
-				return Optional.of(new Element(null, variables, actions));
+				return Optional.of(new Element(null, variables, actions, ""));
 			}
-			MeadElement root = new Element(null, variables, actions);
+			MeadElement root = new Element(null, variables, actions, "");
 			root.setCtx(ctx);
 			root.getNode().setFlexDirection(YogaFlexDirection.COLUMN);
 			buildHierarchy(root, rootElement);
@@ -126,8 +125,9 @@ public class MeadParser
 			return;
 		}
 		MeadElement meadElement = null;
+		String textContent = element.getTextContent().trim();
 		if("Mead".equals(tagName)) meadElement = parent;
-		else meadElement = factory.createElement(attributes, variables, actions);
+		else meadElement = factory.createElement(attributes, variables, actions, textContent);
 		if (meadElement == null)
 		{
 			logger.warn("Factory for element '{}' returned null.", tagName);
@@ -145,10 +145,10 @@ public class MeadParser
 			}
 			else if (childNode instanceof org.w3c.dom.Text)
 			{
-				String textContent = childNode.getTextContent().trim();
+				String textContent1 = childNode.getTextContent().trim();
 				if (!textContent.isEmpty())
 				{
-					meadElement.textContent.set(textContent);
+					meadElement.textContent.set(textContent1);
 				}
 			}
 		}
@@ -156,6 +156,6 @@ public class MeadParser
 
 	public interface IMeadElementFactory
 	{
-		MeadElement createElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions);
+		MeadElement createElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, String textContent);
 	}
 }

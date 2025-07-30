@@ -8,6 +8,7 @@ import dev.zeddevstuff.mead.minecraft.widgets.TextMeadWidget;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.network.chat.Component;
 import org.appliedenergistics.yoga.YogaNodeType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -22,9 +23,11 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 
-	public TextElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public TextElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
-		super(attributes, variables, actions);
+		super(attributes, variables, actions, textContent);
+		IHasColorProperties.applyAttributes(this, attributes);
+		IHasTextProperties.applyAttributes(this, attributes);
 		yogaNode.setNodeType(YogaNodeType.TEXT);
 		if(attributes == null)
 			return;
@@ -38,7 +41,9 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 		});
 		NullUtils.ifNotNull(attributes.get("color"), color ->
 			this.colorProps.textColor().set(IStringParser.COLOR_PARSER.parse(color)));
-		textContent.addObserver(this::updateText);
+		this.textContent.addObserver(this::updateText);
+		if(!textContent.isBlank())
+			this.updateText(textContent);
 		if(getNode().getLayoutWidth() == 0 || Float.isNaN(getNode().getLayoutWidth()))
 			getNode().setWidth(100);
 		if(getNode().getLayoutWidth() == 0 || Float.isNaN(getNode().getLayoutWidth()))

@@ -62,7 +62,7 @@ public class TextMeadWidget extends BasicMeadWidget
 		int width = textElement.getLayout().innerWidth;
 		int fontWidth = font.width(component);
 		int x = textElement.getLayout().innerX + Math.round(this.alignX * (float)(width - fontWidth));
-		int y = textElement.getLayout().innerY + ((int) textElement.getLayout().innerHeight - 9) / 2;
+		int y = textElement.getLayout().innerY + (textElement.getLayout().innerHeight - 9) / 2;
 		FormattedCharSequence formattedCharSequence = fontWidth > width ? this.clipText(component, width) : component.getVisualOrderText();
 		guiGraphics.drawString(this.font, formattedCharSequence, x, y, textElement.colorProps().getTextColor(isActive(), isHovered(), isFocused()));
 	}
