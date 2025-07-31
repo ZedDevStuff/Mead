@@ -31,6 +31,7 @@ public class MeadContext
     public final Registry<MeadParser.IMeadElementFactory> elementFactories = new Registry<>(key);
     public final Registry<IMeadStylePropertyApplier> stylePropertyAppliers = new Registry<>(key);
     private final String modid;
+    private final Class<?> modClass;
     private final HashMap<String, MeadStyle> styleSheets = new HashMap<>();
     public Optional<MeadStyle> getStyleSheet(String path)
     {
@@ -38,15 +39,19 @@ public class MeadContext
     }
 
     /**
-     * Initializes the Mead context with the given mod ID.
+     * Initializes the Mead context with the given mod ID and mod class.
      * @param modid Your mod ID. Make sure it is the same as your "assets" namespace.
+     * @throws IllegalArgumentException If the mod class is null or does not appear to be a mod.
      */
-    public MeadContext(String modid)
+    public MeadContext(String modid, Class<?> modClass)
     {
+        checkModClass(modClass);
         this.modid = modid;
+        this.modClass = modClass;
         registerDefaults();
         loadStyleSheets();
     }
+
     private final MeadParser defaultParser = createParser();
     public MeadParser createParser()
     {
@@ -58,7 +63,7 @@ public class MeadContext
         return new MeadStyleSheetsParser(this);
     }
 
-    public void registerDefaults()
+    private void registerDefaults()
     {
         registerDefaultFactories();
         registerDefaultStylePropertyAppliers();
@@ -93,9 +98,7 @@ public class MeadContext
     {
         try
         {
-            var className = Thread.currentThread().getStackTrace()[3].getClassName();
-            Class<?> clazz = Class.forName(className);
-            NullUtils.ifNotNull(clazz.getProtectionDomain().getCodeSource(), codeSource ->
+            NullUtils.ifNotNull(modClass.getProtectionDomain().getCodeSource(), codeSource ->
                 {
                     NullUtils.ifNotNull(codeSource.getLocation(), location -> {
                         var matcher = tempPattern.matcher(location.getPath());
@@ -120,7 +123,8 @@ public class MeadContext
                     });
                 });
         }
-        catch(Exception e) {
+        catch(Exception e)
+        {
             LOGGER.error("Failed to load style sheets for mod {}", modid, e);
         }
         var size = styleSheets.size();
@@ -128,5 +132,19 @@ public class MeadContext
             LOGGER.info("Loaded 1 stylesheet for mod {}", modid);
         else
             LOGGER.info("Loaded {} stylesheets for mod {}", styleSheets.size(), modid);
+    }
+
+    private void checkModClass(Class<?> modClass)
+    {
+        if(modClass == null)
+            throw new IllegalArgumentException("Mod class cannot be null");
+        var classLoader = modClass.getClassLoader();
+        if(classLoader.getResource("META-INF/neoforge.mods.toml") != null)
+            return;
+        if(classLoader.getResource("fabric.mod.json") != null)
+            return;
+        if(classLoader.getResource("META-INF/mods.toml") != null)
+            return;
+        throw new IllegalArgumentException("Class " + modClass.getName() + " does not appear to be a mod.");
     }
 }

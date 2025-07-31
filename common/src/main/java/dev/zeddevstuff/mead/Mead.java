@@ -9,7 +9,7 @@ public final class Mead
 
 	public static void init()
 	{
-		context = new MeadContext(MOD_ID);
+		context = new MeadContext(MOD_ID, Mead.class);
 	}
 
 	public static MeadContext ctx()
