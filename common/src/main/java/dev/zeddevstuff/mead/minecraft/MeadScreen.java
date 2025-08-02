@@ -1,29 +1,47 @@
 package dev.zeddevstuff.mead.minecraft;
 
+import com.mojang.logging.LogUtils;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
 import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.parsing.MeadParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-public class MeadScreen extends BaseMeadScreen
+public abstract class MeadScreen extends Screen
 {
-	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadScreen.class);
-	public MeadScreen(ResourceLocation screen, MeadContext ctx)
+	private static final Logger LOGGER = LogUtils.getLogger();
+	private final MeadContext ctx;
+	protected long start = 0;
+	protected long end = 0;
+	public long getCreationTime() { return end - start; }
+	public float getCreationTimeMillis() { return (float) (end - start) / 1_000_000f; }
+	protected MeadDOM dom;
+	public MeadScreen(String path, MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
 	{
-		super(tryReadResource(screen), ctx, null, null);
-	}
+		super(Component.literal("MeadScreen"));
+		this.ctx = ctx;
+		if(variables == null)
+			variables = new HashMap<>();
+		if(actions == null)
+			actions = new HashMap<>();
 
-	public MeadScreen(ResourceLocation screen, MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
-	{
-		super(tryReadResource(screen), ctx, variables, actions);
+		start = System.nanoTime();
+		var intermediary = ctx.getIntermediaryDOM(path);
+		if(intermediary.isPresent())
+		{
+			this.dom = new MeadDOM(intermediary.get().build(ctx, variables, actions));
+		}
+		else this.dom = new MeadDOM(null);
+		end = System.nanoTime();
+		LOGGER.info("Created MeadScreen from cache '{}' in {}ms", path, getCreationTimeMillis());
+		resize(Minecraft.getInstance(), Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 	}
 
 	@Override
@@ -47,24 +65,9 @@ public class MeadScreen extends BaseMeadScreen
 		dom.resize(width, height);
 	}
 
-    private static String tryReadResource(ResourceLocation resourceLocation)
-	{
-		var res = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-		if(res.isPresent())
-		{
-			try (InputStream inputStream = res.get().open())
-			{
-				return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-			} catch (Exception ignored)
-			{
-				LOGGER.error("Failed to read Mead resource: {}", resourceLocation);
-				return "<Mead></Mead>"; // Fallback to an empty Mead XML structure
-			}
-		}
-		else
-		{
-            LOGGER.error("Failed to read Mead resource: {}", resourceLocation);
-			return "<Mead></Mead>"; // Fallback to an empty Mead XML structure
-		}
-	}
+	/**
+	 * Overridden so widgets don't get rebuilt on every resize.
+	 */
+	@Override
+	protected void repositionElements() {}
 }

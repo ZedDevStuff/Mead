@@ -19,6 +19,7 @@ public class MeadDOM
 			root.getNode().setHeight(height);
 		}
 	}
+
 	private int width = 0;
 	private int height = 0;
 

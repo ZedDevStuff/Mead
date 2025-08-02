@@ -7,6 +7,6 @@ public class TestMeadScreen extends MeadScreen
 {
 	public TestMeadScreen()
 	{
-		super(ResourceLocation.fromNamespaceAndPath("mead", "ui/test.mead"), Mead.ctx());
+		super("test.mead", Mead.ctx(), null, null);
 	}
 }

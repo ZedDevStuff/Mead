@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class Binding<T>
+public class Binding<T> implements Cloneable
 {
 	private T value;
 	private final Class<T> type;
@@ -101,7 +101,7 @@ public class Binding<T>
 	public boolean setMember(String memberName, Object newValue)
 	{
 		if(memberName == null || memberName.isEmpty() && newValue.getClass() == type)
-			set( newValue);
+			set(newValue);
 		if (memberSetters.get(value.getClass()).containsKey(memberName)) {
 			memberSetters.get(value.getClass()).get(memberName).accept(value, newValue);
 			notifyObservers();
@@ -175,7 +175,24 @@ public class Binding<T>
 		observers.clear();
 	}
 
-	public interface IObserver<T>
+	@SuppressWarnings("unckecked")
+    public Binding<T> clone()
+	{
+		try
+		{
+			long start = System.nanoTime();
+			var clone = (Binding<T>) super.clone();
+			long end = System.nanoTime();
+			System.out.println("Cloned Binding in " + (end - start) + " ns");
+			return clone;
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new RuntimeException("Failed to clone Binding", e);
+		}
+	}
+
+    public interface IObserver<T>
 	{
 		void onChange(T newValue);
 	}
@@ -209,9 +226,12 @@ public class Binding<T>
 			{
 				String fieldName = field.getName();
 				getters.put(fieldName, obj -> {
-					try {
+					try
+					{
 						return field.get(obj);
-					} catch (IllegalAccessException e) {
+					}
+					catch (IllegalAccessException e)
+					{
 						// Throw an insignificant exception to avoid breaking the flow
 						throw new RuntimeException("Failed to get field: " + fieldName, e);
 					}

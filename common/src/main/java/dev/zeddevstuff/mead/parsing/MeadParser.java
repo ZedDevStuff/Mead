@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.parsing;
 
 import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.IntermediaryDOM;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
@@ -11,14 +12,18 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 public class MeadParser
@@ -77,7 +82,20 @@ public class MeadParser
 			throw new RuntimeException("Failed to initialize DocumentBuilder", e);
 		}
 	}
-
+	public Optional<IntermediaryDOM> parseIntermediary(String xml)
+	{
+		try
+		{
+			Document document = documentBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+			var intermediary = new IntermediaryDOM(document.getDocumentElement());
+			return Optional.of(intermediary);
+		}
+		catch (IOException | SAXException e)
+        {
+			logger.error("Failed to parse Intermediary DOM from content: {}", e.getMessage());
+			return Optional.empty();
+        }
+    }
 	public Optional<MeadElement> parse(String input)
 	{
 		try

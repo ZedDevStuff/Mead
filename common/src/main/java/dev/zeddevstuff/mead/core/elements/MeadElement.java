@@ -19,14 +19,23 @@ import java.util.concurrent.Callable;
 /**
  * The base class for all Mead elements.
  */
-public abstract class MeadElement
+public abstract class MeadElement implements Cloneable
 {
 	protected YogaNode yogaNode = new YogaNode();
 	public YogaNode getNode() { return yogaNode; }
 
-	private MeadContext ctx;
+	protected MeadContext ctx;
 	public MeadContext getCtx() { return ctx; }
 	public void setCtx(MeadContext ctx) { this.ctx = ctx; }
+
+	/**
+	 * Text content of the element. This is set by the MeadParser. Ignore it if you're not using it.
+	 */
+	public Binding<String> textContent = new Binding<>("");
+	/**
+	 * Use this as a cache
+	 */
+	protected AbstractWidget widget;
 
 	public abstract String getTagName();
 
@@ -34,6 +43,7 @@ public abstract class MeadElement
 	public MeadElement getParent() { return parent; }
 	public void setParent(MeadElement parent)
 	{
+		//yogaNode.setOwner(parent.yogaNode);
 		parent.getNode().addChildAt(yogaNode, parent.getNode().getLayoutChildCount());
 		this.parent = parent;
 	}
@@ -94,14 +104,12 @@ public abstract class MeadElement
 	{
 		return attributes == null ? new HashMap<>() : attributes;
 	}
-	/**
-	 * Text content of the element. This is set by the MeadParser. Ignore it if you're not using it.
-	 */
-	public Binding<String> textContent = new Binding<>("");
-	/**
-	 * Use this as a cache
-	 */
-	protected AbstractWidget widget;
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException
+	{
+		return super.clone();
+	}
 
 	/**
 	 * Returns the widget associated with this element. Should always return {@link MeadElement#widget} unless absolutely necessary and aware of what you're doing.

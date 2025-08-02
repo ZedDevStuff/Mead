@@ -31,12 +31,12 @@ public abstract class TitleScreenMixin extends Screen
 				{
 					var actions = new HashMap<String, Callable<?>>();
 					actions.put("sayHello", () -> { System.out.println("Hello from Mead!"); return null; });
-					Minecraft.getInstance().setScreen(new MeadFileScreen(
+					/*Minecraft.getInstance().setScreen(new MeadFileScreen(
 						Path.of("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead"),
 						Mead.ctx(),
 						null,
-						actions));
-					//Minecraft.getInstance().setScreen(new TestMeadScreen());
+						actions));*/
+					Minecraft.getInstance().setScreen(new TestMeadScreen());
 				} catch (Exception e)
 				{
 					throw new RuntimeException(e);

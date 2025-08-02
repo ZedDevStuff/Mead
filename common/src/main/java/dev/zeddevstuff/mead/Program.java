@@ -1,7 +1,11 @@
 package dev.zeddevstuff.mead;
 
+import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.core.MeadContext;
-import dev.zeddevstuff.mead.parsing.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class Program
 {
@@ -11,15 +15,11 @@ public class Program
 	 *
 	 * @param args Command line arguments passed to the program.
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) throws IOException
+    {
 		var ctx = new MeadContext("null", Mead.class);
-		MeadStyleSheetsParser parser = new MeadStyleSheetsParser(ctx);
-		var el = parser.parse("""
-		btn {
-		    textColor: #FFFFFF;
-		    backgroundColor: #ff0000;
-		}
-		""");
+		File file = new File("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead");
+		String fileContent = Files.readString(file.toPath());
+		var parsed = ctx.createParser().parse(fileContent);
 	}
 }

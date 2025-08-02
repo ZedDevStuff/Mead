@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.core;
 
+import com.llamalad7.mixinextras.utils.MixinExtrasLogger;
 import com.mojang.logging.LogUtils;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.RectElement;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,12 @@ public class MeadContext
     public final Registry<IMeadStylePropertyApplier> stylePropertyAppliers = new Registry<>(key);
     private final String modid;
     private final Class<?> modClass;
+
+    private final HashMap<String, IntermediaryDOM> intermediaryDOMs = new HashMap<>();
+    public Optional<IntermediaryDOM> getIntermediaryDOM(String path)
+    {
+        return Optional.ofNullable(intermediaryDOMs.get(path));
+    }
     private final HashMap<String, MeadStyle> styleSheets = new HashMap<>();
     public Optional<MeadStyle> getStyleSheet(String path)
     {
@@ -49,13 +57,18 @@ public class MeadContext
         this.modid = modid;
         this.modClass = modClass;
         registerDefaults();
+        loadMeadDocuments();
         loadStyleSheets();
     }
 
-    private final MeadParser defaultParser = createParser();
+    private final MeadParser defaultMeadParser = createParser();
     public MeadParser createParser()
     {
         return new MeadParser(this);
+    }
+    public MeadParser createParser(HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+    {
+        return new MeadParser(this, variables, actions);
     }
     private final MeadStyleSheetsParser defaultStyleSheetsParser = createStyleSheetsParser();
     public MeadStyleSheetsParser createStyleSheetsParser()
@@ -94,6 +107,45 @@ public class MeadContext
         MeadStyle style = null;
     }
     private static final Pattern tempPattern = Pattern.compile(".+\\.jar");
+    private void loadMeadDocuments()
+    {
+        try
+        {
+            NullUtils.ifNotNull(modClass.getProtectionDomain().getCodeSource(), codeSource ->
+            {
+                NullUtils.ifNotNull(codeSource.getLocation(), location -> {
+                    var matcher = tempPattern.matcher(location.getPath());
+                    if(matcher.find())
+                    {
+                        try (JarFile jarFile = new JarFile(matcher.group()))
+                        {
+                            jarFile.stream()
+                                .filter(entry -> entry.getName().startsWith("assets/" + modid + "/ui/") && entry.getName().endsWith(".mead"))
+                                .forEach(entry -> {
+                                    try (InputStream inputStream = jarFile.getInputStream(entry))
+                                    {
+                                        String relativePath = entry.getName().replace("assets/" + modid + "/ui/", "");
+                                        String content = new String(inputStream.readAllBytes());
+                                        defaultMeadParser.parseIntermediary(content)
+                                            .ifPresent(intermediary -> intermediaryDOMs.put(relativePath, intermediary));
+                                    } catch (Exception ignored) {}
+                                });
+                        }
+                        catch (Exception ignored) {}
+                    }
+                });
+            });
+        }
+        catch(Exception e)
+        {
+            LOGGER.error("Failed to load mead documents for mod {}", modid, e);
+        }
+        var size = intermediaryDOMs.size();
+        if(size == 1)
+            LOGGER.info("Loaded 1 mead document for mod {}", modid);
+        else
+            LOGGER.info("Loaded {} mead documents for mod {}", intermediaryDOMs.size(), modid);
+    }
     private void loadStyleSheets()
     {
         try
