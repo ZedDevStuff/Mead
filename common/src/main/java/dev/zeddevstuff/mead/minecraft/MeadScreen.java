@@ -3,7 +3,7 @@ package dev.zeddevstuff.mead.minecraft;
 import com.mojang.logging.LogUtils;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,7 +21,7 @@ public class MeadScreen extends Screen
 	public long getCreationTime() { return end - start; }
 	public float getCreationTimeMillis() { return (float) (end - start) / 1_000_000f; }
 	protected MeadDOM dom;
-	public MeadScreen(String path, MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadScreen(String path, MeadContext ctx, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
 	{
 		super(Component.literal("MeadScreen"));
 		if(variables == null)

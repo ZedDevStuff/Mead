@@ -1,4 +1,4 @@
-package dev.zeddevstuff.mead.core;
+package dev.zeddevstuff.mead.core.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class Binding<T> implements Cloneable
+public class Observable<T> implements Cloneable
 {
 	private T value;
 	private final Class<T> type;
@@ -26,13 +26,13 @@ public class Binding<T> implements Cloneable
 	private static HashMap<Class<?>, HashMap<String, Function<Object, Object>>> memberGetters = null;
 	private static HashMap<Class<?>, HashMap<String, BiConsumer<Object, Object>>> memberSetters = null;
 	@SuppressWarnings("unchecked")
-	public Binding(T initialValue)
+	public Observable(T initialValue)
 	{
 		this.value = initialValue;
 		this.type = (Class<T>) initialValue.getClass();
 		initializeMemberAccess(initialValue.getClass());
 	}
-	public Binding(T initialValue, String targetMemberName)
+	public Observable(T initialValue, String targetMemberName)
 	{
 		this(initialValue);
 		this.targetMemberName = targetMemberName;
@@ -135,7 +135,7 @@ public class Binding<T> implements Cloneable
 	/**
 	 * Copies all observers from this binding to the target binding.
 	 */
-	public void copyObserversTo(Binding<T> target)
+	public void copyObserversTo(Observable<T> target)
 	{
 		for (IObserver<T> observer : observers)
 			target.addObserver(observer);
@@ -144,7 +144,7 @@ public class Binding<T> implements Cloneable
 	/**
 	 * Copies all observers from the source binding to this binding.
 	 */
-	public void copyObserversFrom(Binding<T> source)
+	public void copyObserversFrom(Observable<T> source)
 	{
 		for (IObserver<T> observer : source.observers)
 			this.addObserver(observer);
@@ -153,7 +153,7 @@ public class Binding<T> implements Cloneable
 	/**
 	 * Migrates (copy then clear) all observers from this binding to the target binding.
 	 */
-	public void migrateObserversTo(Binding<T> target)
+	public void migrateObserversTo(Observable<T> target)
 	{
 		this.copyObserversTo(target);
 		this.clearObservers();
@@ -162,7 +162,7 @@ public class Binding<T> implements Cloneable
 	/**
 	 * Migrates (copy then clear) all observers from the source binding to this binding.
 	 */
-	public void migrateObserversFrom(Binding<T> source)
+	public void migrateObserversFrom(Observable<T> source)
 	{
 		this.copyObserversFrom(source);
 		source.clearObservers();
@@ -176,19 +176,19 @@ public class Binding<T> implements Cloneable
 	}
 
 	@SuppressWarnings("unckecked")
-    public Binding<T> clone()
+    public Observable<T> clone()
 	{
 		try
 		{
 			long start = System.nanoTime();
-			var clone = (Binding<T>) super.clone();
+			var clone = (Observable<T>) super.clone();
 			long end = System.nanoTime();
-			System.out.println("Cloned Binding in " + (end - start) + " ns");
+			System.out.println("Cloned Observable in " + (end - start) + " ns");
 			return clone;
 		}
 		catch (CloneNotSupportedException e)
 		{
-			throw new RuntimeException("Failed to clone Binding", e);
+			throw new RuntimeException("Failed to clone Observable", e);
 		}
 	}
 
@@ -200,7 +200,7 @@ public class Binding<T> implements Cloneable
 	@Override
 	public String toString()
 	{
-		return "Binding{" +
+		return "Observable{" +
 				"value=" + value +
 				", observers=" + observers.size() +
 				'}';

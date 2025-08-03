@@ -1,6 +1,6 @@
 package dev.zeddevstuff.mead.interfaces;
 
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.utils.NullUtils;
 
 import java.util.HashMap;
@@ -11,41 +11,41 @@ public interface IHasColorProperties
 
 	public class ColorProperties
 	{
-		private final Binding<Integer> backgroundColor = new Binding<>(0xFFFFFFFF);
-		public Binding<Integer> backgroundColor() { return backgroundColor; }
-		private final Binding<Integer> backgroundHoverColor = new Binding<>(0xFFCCCCCC);
-		public Binding<Integer> backgroundHoverColor() { return backgroundHoverColor; }
-		private final Binding<Integer> backgroundActiveColor = new Binding<>(0xFFBBBBBB);
-		public Binding<Integer> backgroundActiveColor() { return backgroundActiveColor; }
-		private final Binding<Integer> backgroundDisabledColor = new Binding<>(0xFFAAAAAA);
-		public Binding<Integer> backgroundDisabledColor() { return backgroundDisabledColor; }
+		private final Observable<Integer> backgroundColor = new Observable<>(0xFFFFFFFF);
+		public Observable<Integer> backgroundColor() { return backgroundColor; }
+		private final Observable<Integer> backgroundHoverColor = new Observable<>(0xFFCCCCCC);
+		public Observable<Integer> backgroundHoverColor() { return backgroundHoverColor; }
+		private final Observable<Integer> backgroundActiveColor = new Observable<>(0xFFBBBBBB);
+		public Observable<Integer> backgroundActiveColor() { return backgroundActiveColor; }
+		private final Observable<Integer> backgroundDisabledColor = new Observable<>(0xFFAAAAAA);
+		public Observable<Integer> backgroundDisabledColor() { return backgroundDisabledColor; }
 
-		private final Binding<Integer> borderColor = new Binding<>(0xFF000000);
-		public Binding<Integer> borderColor() { return borderColor; }
-		private final Binding<Integer> borderHoverColor = new Binding<>(0xFF888888);
-		public Binding<Integer> borderHoverColor() { return borderHoverColor; }
-		private final Binding<Integer> borderActiveColor = new Binding<>(0xFF777777);
-		public Binding<Integer> borderActiveColor() { return borderActiveColor; }
-		private final Binding<Integer> borderDisabledColor = new Binding<>(0xFF555555);
-		public Binding<Integer> borderDisabledColor() { return borderDisabledColor; }
+		private final Observable<Integer> borderColor = new Observable<>(0xFF000000);
+		public Observable<Integer> borderColor() { return borderColor; }
+		private final Observable<Integer> borderHoverColor = new Observable<>(0xFF888888);
+		public Observable<Integer> borderHoverColor() { return borderHoverColor; }
+		private final Observable<Integer> borderActiveColor = new Observable<>(0xFF777777);
+		public Observable<Integer> borderActiveColor() { return borderActiveColor; }
+		private final Observable<Integer> borderDisabledColor = new Observable<>(0xFF555555);
+		public Observable<Integer> borderDisabledColor() { return borderDisabledColor; }
 
-		private final Binding<Integer> textColor = new Binding<>(0xFFFFFFFF);
-		public Binding<Integer> textColor() { return textColor; }
-		private final Binding<Integer> textHoverColor = new Binding<>(0xFFFFFFFF);
-		public Binding<Integer> textHoverColor() { return textHoverColor; }
-		private final Binding<Integer> textActiveColor = new Binding<>(0xFFFFFFFF);
-		public Binding<Integer> textActiveColor() { return textActiveColor; }
-		private final Binding<Integer> textDisabledColor = new Binding<>(0xFFAAAAAA);
-		public Binding<Integer> textDisabledColor() { return textDisabledColor; }
+		private final Observable<Integer> textColor = new Observable<>(0xFFFFFFFF);
+		public Observable<Integer> textColor() { return textColor; }
+		private final Observable<Integer> textHoverColor = new Observable<>(0xFFFFFFFF);
+		public Observable<Integer> textHoverColor() { return textHoverColor; }
+		private final Observable<Integer> textActiveColor = new Observable<>(0xFFFFFFFF);
+		public Observable<Integer> textActiveColor() { return textActiveColor; }
+		private final Observable<Integer> textDisabledColor = new Observable<>(0xFFAAAAAA);
+		public Observable<Integer> textDisabledColor() { return textDisabledColor; }
 
-		private final Binding<Integer> textShadowColor = new Binding<>(0xFF000000);
-		public Binding<Integer> textShadowColor() { return textShadowColor; }
-		private final Binding<Integer> textShadowHoverColor = new Binding<>(0xFF000000);
-		public Binding<Integer> textShadowHoverColor() { return textShadowHoverColor; }
-		private final Binding<Integer> textShadowActiveColor = new Binding<>(0xFF000000);
-		public Binding<Integer> textShadowActiveColor() { return textShadowActiveColor; }
-		private final Binding<Integer> textShadowDisabledColor = new Binding<>(0xFFAAAAAA);
-		public Binding<Integer> textShadowDisabledColor() { return textShadowDisabledColor; }
+		private final Observable<Integer> textShadowColor = new Observable<>(0xFF000000);
+		public Observable<Integer> textShadowColor() { return textShadowColor; }
+		private final Observable<Integer> textShadowHoverColor = new Observable<>(0xFF000000);
+		public Observable<Integer> textShadowHoverColor() { return textShadowHoverColor; }
+		private final Observable<Integer> textShadowActiveColor = new Observable<>(0xFF000000);
+		public Observable<Integer> textShadowActiveColor() { return textShadowActiveColor; }
+		private final Observable<Integer> textShadowDisabledColor = new Observable<>(0xFFAAAAAA);
+		public Observable<Integer> textShadowDisabledColor() { return textShadowDisabledColor; }
 
 
 

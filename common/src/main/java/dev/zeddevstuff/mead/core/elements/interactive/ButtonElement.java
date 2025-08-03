@@ -1,6 +1,6 @@
 package dev.zeddevstuff.mead.core.elements.interactive;
 
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.core.ElementFlavor;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.interfaces.IHasColorProperties;
@@ -23,9 +23,9 @@ public class ButtonElement extends MeadElement implements IHasColorProperties, I
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 	public Callable<?> onClick = () -> null;
-	private final Binding<ElementFlavor> flavor = new Binding<>(ElementFlavor.VANILLA);
-	public Binding<ElementFlavor> getFlavor() { return flavor; }
-	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	private final Observable<ElementFlavor> flavor = new Observable<>(ElementFlavor.VANILLA);
+	public Observable<ElementFlavor> getFlavor() { return flavor; }
+	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		super(attributes, variables, actions, textContent);
 		IHasColorProperties.applyAttributes(this, attributes);

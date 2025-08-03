@@ -1,7 +1,7 @@
 package dev.zeddevstuff.mead.core.elements.parsing;
 
 import com.mojang.logging.LogUtils;
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.styling.MeadStyle;
 import dev.zeddevstuff.mead.utils.NullUtils;
@@ -36,7 +36,7 @@ public class StyleElement extends MeadElement implements IParsingCompleteListene
 
     @Override
     public String getTagName() { return "null"; }
-    public StyleElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+    public StyleElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
     {
         super(null, null, null, textContent);
         NullUtils.ifNotNull(attributes.get("src"), value -> src = value);

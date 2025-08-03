@@ -2,7 +2,7 @@ package dev.zeddevstuff.mead.core.elements;
 
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.interfaces.IStringParser;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -31,7 +31,7 @@ public abstract class MeadElement implements Cloneable
 	/**
 	 * Text content of the element. This is set by the MeadParser. Ignore it if you're not using it.
 	 */
-	public Binding<String> textContent = new Binding<>("");
+	public Observable<String> textContent = new Observable<>("");
 	/**
 	 * Use this as a cache
 	 */
@@ -90,7 +90,7 @@ public abstract class MeadElement implements Cloneable
 		return styles.contains(style);
 	}
 
-	public MeadElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public MeadElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		this.textContent.set(textContent);
 		applyBaseProperties(this, sanitizeAttributes(attributes));

@@ -1,6 +1,6 @@
 package dev.zeddevstuff.mead.core.elements.parsing;
 
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import net.minecraft.client.gui.components.AbstractWidget;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ public class ImportElement extends MeadElement implements IParsingCompleteListen
 {
 	@Override
 	public String getTagName() { return "null"; }
-	public ImportElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public ImportElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		super(null, null, null, "");
 	}

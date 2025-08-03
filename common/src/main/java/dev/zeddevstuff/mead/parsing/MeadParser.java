@@ -1,6 +1,6 @@
 package dev.zeddevstuff.mead.parsing;
 
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.core.IntermediaryDOM;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.elements.Element;
@@ -16,13 +16,8 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -33,7 +28,7 @@ public class MeadParser
 	private DocumentBuilder documentBuilder;
 
 	private HashMap<String, IMeadElementFactory> elements = new HashMap<>();
-	private HashMap<String, Binding<?>> variables = new HashMap<>();
+	private HashMap<String, Observable<?>> variables = new HashMap<>();
 	private HashMap<String, Callable<?>> actions = new HashMap<>();
 	private final UUID eventKey = UUID.randomUUID();
 	private final SingleEvent<Void> parsingCompleteEvent = new SingleEvent<>(eventKey);
@@ -44,7 +39,7 @@ public class MeadParser
 		this.elements = ctx.elementFactories.toMap();
 		initializeDocumentBuilder();
 	}
-	public MeadParser(@NotNull MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadParser(@NotNull MeadContext ctx, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
 	{
 		this.ctx = ctx;
 		this.elements = ctx.elementFactories.toMap();
@@ -52,7 +47,7 @@ public class MeadParser
 		this.actions = actions;
 		initializeDocumentBuilder();
 	}
-	public MeadParser(@NotNull MeadContext ctx, HashMap<String, IMeadElementFactory> elements, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadParser(@NotNull MeadContext ctx, HashMap<String, IMeadElementFactory> elements, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
 	{
 		this.ctx = ctx;
 		this.elements = ctx.elementFactories.toMap();
@@ -174,6 +169,6 @@ public class MeadParser
 
 	public interface IMeadElementFactory
 	{
-		MeadElement createElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, String textContent);
+		MeadElement createElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, String textContent);
 	}
 }

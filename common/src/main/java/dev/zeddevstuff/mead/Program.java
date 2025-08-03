@@ -1,6 +1,5 @@
 package dev.zeddevstuff.mead;
 
-import dev.zeddevstuff.mead.core.Binding;
 import dev.zeddevstuff.mead.core.MeadContext;
 
 import java.io.File;

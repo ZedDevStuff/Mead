@@ -1,6 +1,6 @@
 package dev.zeddevstuff.mead.core.elements;
 
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.interfaces.IHasColorProperties;
 import dev.zeddevstuff.mead.interfaces.IHasTextProperties;
 import dev.zeddevstuff.mead.interfaces.IStringParser;
@@ -23,7 +23,7 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 
-	public TextElement(HashMap<String, String> attributes, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public TextElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		super(attributes, variables, actions, textContent);
 		IHasColorProperties.applyAttributes(this, attributes);

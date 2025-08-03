@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.core;
 
 import com.mojang.logging.LogUtils;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.RectElement;
 import dev.zeddevstuff.mead.core.elements.TextElement;
@@ -65,7 +66,7 @@ public class MeadContext
     {
         return new MeadParser(this);
     }
-    public MeadParser createParser(HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions)
+    public MeadParser createParser(HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
     {
         return new MeadParser(this, variables, actions);
     }

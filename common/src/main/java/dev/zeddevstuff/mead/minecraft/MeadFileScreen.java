@@ -1,6 +1,6 @@
 package dev.zeddevstuff.mead.minecraft;
 
-import dev.zeddevstuff.mead.core.Binding;
+import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class MeadFileScreen extends Screen
 		end = System.nanoTime();
         LOGGER.info("Created MeadFileScreen from file '{}' in {}ms", screen, getCreationTimeMillis());
 	}
-	public MeadFileScreen(Path screen, MeadContext ctx, HashMap<String, Binding<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
+	public MeadFileScreen(Path screen, MeadContext ctx, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
 	{
 		super(Component.literal("MeadScreen"));
 		this.ctx = ctx;
