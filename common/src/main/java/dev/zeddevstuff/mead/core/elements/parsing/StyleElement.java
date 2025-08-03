@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 
 public class StyleElement extends MeadElement implements IParsingCompleteListener
 {
-    private final Logger LOGGER = LogUtils.getLogger();
+    private final Logger logger = LogUtils.getLogger();
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<MeadStyle> style = Optional.empty();
     private String src;
@@ -30,7 +30,7 @@ public class StyleElement extends MeadElement implements IParsingCompleteListene
         }
         else
         {
-            LOGGER.warn("Style element with src '{}' has text content, ignoring src attribute.", src);
+            logger.warn("Style element with src '{}' has text content, ignoring src attribute.", src);
         }
     }
 

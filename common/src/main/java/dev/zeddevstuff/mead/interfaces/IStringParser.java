@@ -302,7 +302,7 @@ public interface IStringParser<T>
 			int r = Integer.parseInt(rgbValues[0].trim());
 			int g = Integer.parseInt(rgbValues[1].trim());
 			int b = Integer.parseInt(rgbValues[2].trim());
-			return (r << 16) | (g << 8) | b; // Combine RGB values into a single integer
+			return (255 << 24) | (r << 16) | (g << 8) | b; // Combine RGB values into a single integer
 		} catch (NumberFormatException e) {
 			return 0xFFFFFFFF; // Default to white if parsing fails
 		}

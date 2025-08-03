@@ -17,8 +17,8 @@ import java.util.concurrent.Callable;
 public class MeadFileScreen extends Screen
 {
 	private final MeadContext ctx;
-	protected long start = 0;
-	protected long end = 0;
+	protected long start;
+	protected long end;
 	public long getCreationTime() { return end - start; }
 	public float getCreationTimeMillis() { return (float) (end - start) / 1_000_000f; }
 	protected MeadDOM dom;
@@ -96,7 +96,8 @@ public class MeadFileScreen extends Screen
 		try
 		{
 			return java.nio.file.Files.readString(file);
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			System.err.println("Failed to read Mead file: " + file);
 			return "<Mead></Mead>"; // Fallback to an empty Mead XML structure

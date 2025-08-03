@@ -1,6 +1,5 @@
 package dev.zeddevstuff.mead.core;
 
-import com.llamalad7.mixinextras.utils.MixinExtrasLogger;
 import com.mojang.logging.LogUtils;
 import dev.zeddevstuff.mead.core.elements.Element;
 import dev.zeddevstuff.mead.core.elements.RectElement;
@@ -28,7 +27,7 @@ import java.util.regex.Pattern;
  */
 public class MeadContext
 {
-    private final Logger LOGGER = LogUtils.getLogger();
+    private final Logger logger = LogUtils.getLogger();
     private final UUID key = UUID.randomUUID();
     public final Registry<MeadParser.IMeadElementFactory> elementFactories = new Registry<>(key);
     public final Registry<IMeadStylePropertyApplier> stylePropertyAppliers = new Registry<>(key);
@@ -51,7 +50,7 @@ public class MeadContext
      * @param modid Your mod ID. Make sure it is the same as your "assets" namespace.
      * @throws IllegalArgumentException If the mod class is null or does not appear to be a mod.
      */
-    public MeadContext(String modid, Class<?> modClass)
+    public MeadContext(String modid, Class<?> modClass) throws IllegalArgumentException
     {
         checkModClass(modClass);
         this.modid = modid;
@@ -138,13 +137,13 @@ public class MeadContext
         }
         catch(Exception e)
         {
-            LOGGER.error("Failed to load mead documents for mod {}", modid, e);
+            logger.error("Failed to load mead documents for mod {}", modid, e);
         }
         var size = intermediaryDOMs.size();
         if(size == 1)
-            LOGGER.info("Loaded 1 mead document for mod {}", modid);
+            logger.info("Loaded 1 mead document for mod {}", modid);
         else
-            LOGGER.info("Loaded {} mead documents for mod {}", intermediaryDOMs.size(), modid);
+            logger.info("Loaded {} mead documents for mod {}", intermediaryDOMs.size(), modid);
     }
     private void loadStyleSheets()
     {
@@ -177,13 +176,13 @@ public class MeadContext
         }
         catch(Exception e)
         {
-            LOGGER.error("Failed to load style sheets for mod {}", modid, e);
+            logger.error("Failed to load style sheets for mod {}", modid, e);
         }
         var size = styleSheets.size();
         if(size == 1)
-            LOGGER.info("Loaded 1 stylesheet for mod {}", modid);
+            logger.info("Loaded 1 stylesheet for mod {}", modid);
         else
-            LOGGER.info("Loaded {} stylesheets for mod {}", styleSheets.size(), modid);
+            logger.info("Loaded {} stylesheets for mod {}", styleSheets.size(), modid);
     }
 
     private void checkModClass(Class<?> modClass)
