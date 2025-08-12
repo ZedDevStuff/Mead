@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead;
 
 import dev.zeddevstuff.mead.core.MeadContext;
+import dev.zeddevstuff.mead.core.data.ReflectedProperty;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +17,12 @@ public class Program
 	 */
 	public static void main(String[] args) throws IOException
     {
-		var ctx = new MeadContext("null", Mead.class);
+//		var ctx = new MeadContext("null", Mead.class);
+//		File file = new File("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead");
+//		String fileContent = Files.readString(file.toPath());
+//		var parsed = ctx.createParser().parse(fileContent);
 		File file = new File("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead");
-		String fileContent = Files.readString(file.toPath());
-		var parsed = ctx.createParser().parse(fileContent);
+		ReflectedProperty property = new ReflectedProperty(file, "toPath().getFileName()");
+		System.out.println(property.get());
 	}
 }
