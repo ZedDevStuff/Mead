@@ -1,5 +1,7 @@
 package dev.zeddevstuff.mead.core.data;
 
+import org.burningwave.core.assembler.StaticComponentContainer;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -113,5 +115,10 @@ public class ReflectedProperty extends Property<Object>
 	{
 		if(setMethod != null && targetParent != null)
 			setMethod.accept(targetParent, value);
+	}
+
+	static
+	{
+		StaticComponentContainer.Modules.exportAllToAll();
 	}
 }

@@ -1,6 +1,7 @@
-package dev.zeddevstuff.mead.interfaces;
+package dev.zeddevstuff.mead.core.styling;
 
-import dev.zeddevstuff.mead.core.data.Observable;
+import dev.zeddevstuff.mead.core.data.ObservableProperty;
+import dev.zeddevstuff.mead.core.parsing.IStringParser;
 import dev.zeddevstuff.mead.utils.NullUtils;
 
 import java.util.HashMap;
@@ -11,41 +12,41 @@ public interface IHasColorProperties
 
 	public class ColorProperties
 	{
-		private final Observable<Integer> backgroundColor = new Observable<>(0xFFFFFFFF);
-		public Observable<Integer> backgroundColor() { return backgroundColor; }
-		private final Observable<Integer> backgroundHoverColor = new Observable<>(0xFFCCCCCC);
-		public Observable<Integer> backgroundHoverColor() { return backgroundHoverColor; }
-		private final Observable<Integer> backgroundActiveColor = new Observable<>(0xFFBBBBBB);
-		public Observable<Integer> backgroundActiveColor() { return backgroundActiveColor; }
-		private final Observable<Integer> backgroundDisabledColor = new Observable<>(0xFFAAAAAA);
-		public Observable<Integer> backgroundDisabledColor() { return backgroundDisabledColor; }
+		private final ObservableProperty<Integer> backgroundColor = new ObservableProperty<>(0xFFFFFFFF);
+		public ObservableProperty<Integer> backgroundColor() { return backgroundColor; }
+		private final ObservableProperty<Integer> backgroundHoverColor = new ObservableProperty<>(0xFFCCCCCC);
+		public ObservableProperty<Integer> backgroundHoverColor() { return backgroundHoverColor; }
+		private final ObservableProperty<Integer> backgroundActiveColor = new ObservableProperty<>(0xFFBBBBBB);
+		public ObservableProperty<Integer> backgroundActiveColor() { return backgroundActiveColor; }
+		private final ObservableProperty<Integer> backgroundDisabledColor = new ObservableProperty<>(0xFFAAAAAA);
+		public ObservableProperty<Integer> backgroundDisabledColor() { return backgroundDisabledColor; }
 
-		private final Observable<Integer> borderColor = new Observable<>(0xFF000000);
-		public Observable<Integer> borderColor() { return borderColor; }
-		private final Observable<Integer> borderHoverColor = new Observable<>(0xFF888888);
-		public Observable<Integer> borderHoverColor() { return borderHoverColor; }
-		private final Observable<Integer> borderActiveColor = new Observable<>(0xFF777777);
-		public Observable<Integer> borderActiveColor() { return borderActiveColor; }
-		private final Observable<Integer> borderDisabledColor = new Observable<>(0xFF555555);
-		public Observable<Integer> borderDisabledColor() { return borderDisabledColor; }
+		private final ObservableProperty<Integer> borderColor = new ObservableProperty<>(0xFF000000);
+		public ObservableProperty<Integer> borderColor() { return borderColor; }
+		private final ObservableProperty<Integer> borderHoverColor = new ObservableProperty<>(0xFF888888);
+		public ObservableProperty<Integer> borderHoverColor() { return borderHoverColor; }
+		private final ObservableProperty<Integer> borderActiveColor = new ObservableProperty<>(0xFF777777);
+		public ObservableProperty<Integer> borderActiveColor() { return borderActiveColor; }
+		private final ObservableProperty<Integer> borderDisabledColor = new ObservableProperty<>(0xFF555555);
+		public ObservableProperty<Integer> borderDisabledColor() { return borderDisabledColor; }
 
-		private final Observable<Integer> textColor = new Observable<>(0xFFFFFFFF);
-		public Observable<Integer> textColor() { return textColor; }
-		private final Observable<Integer> textHoverColor = new Observable<>(0xFFFFFFFF);
-		public Observable<Integer> textHoverColor() { return textHoverColor; }
-		private final Observable<Integer> textActiveColor = new Observable<>(0xFFFFFFFF);
-		public Observable<Integer> textActiveColor() { return textActiveColor; }
-		private final Observable<Integer> textDisabledColor = new Observable<>(0xFFAAAAAA);
-		public Observable<Integer> textDisabledColor() { return textDisabledColor; }
+		private final ObservableProperty<Integer> textColor = new ObservableProperty<>(0xFFFFFFFF);
+		public ObservableProperty<Integer> textColor() { return textColor; }
+		private final ObservableProperty<Integer> textHoverColor = new ObservableProperty<>(0xFFFFFFFF);
+		public ObservableProperty<Integer> textHoverColor() { return textHoverColor; }
+		private final ObservableProperty<Integer> textActiveColor = new ObservableProperty<>(0xFFFFFFFF);
+		public ObservableProperty<Integer> textActiveColor() { return textActiveColor; }
+		private final ObservableProperty<Integer> textDisabledColor = new ObservableProperty<>(0xFFAAAAAA);
+		public ObservableProperty<Integer> textDisabledColor() { return textDisabledColor; }
 
-		private final Observable<Integer> textShadowColor = new Observable<>(0xFF000000);
-		public Observable<Integer> textShadowColor() { return textShadowColor; }
-		private final Observable<Integer> textShadowHoverColor = new Observable<>(0xFF000000);
-		public Observable<Integer> textShadowHoverColor() { return textShadowHoverColor; }
-		private final Observable<Integer> textShadowActiveColor = new Observable<>(0xFF000000);
-		public Observable<Integer> textShadowActiveColor() { return textShadowActiveColor; }
-		private final Observable<Integer> textShadowDisabledColor = new Observable<>(0xFFAAAAAA);
-		public Observable<Integer> textShadowDisabledColor() { return textShadowDisabledColor; }
+		private final ObservableProperty<Integer> textShadowColor = new ObservableProperty<>(0xFF000000);
+		public ObservableProperty<Integer> textShadowColor() { return textShadowColor; }
+		private final ObservableProperty<Integer> textShadowHoverColor = new ObservableProperty<>(0xFF000000);
+		public ObservableProperty<Integer> textShadowHoverColor() { return textShadowHoverColor; }
+		private final ObservableProperty<Integer> textShadowActiveColor = new ObservableProperty<>(0xFF000000);
+		public ObservableProperty<Integer> textShadowActiveColor() { return textShadowActiveColor; }
+		private final ObservableProperty<Integer> textShadowDisabledColor = new ObservableProperty<>(0xFFAAAAAA);
+		public ObservableProperty<Integer> textShadowDisabledColor() { return textShadowDisabledColor; }
 
 
 

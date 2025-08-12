@@ -1,7 +1,7 @@
-package dev.zeddevstuff.mead.styling;
+package dev.zeddevstuff.mead.core.styling;
 
 import dev.zeddevstuff.mead.core.elements.MeadElement;
-import dev.zeddevstuff.mead.interfaces.IStringParser;
+import dev.zeddevstuff.mead.core.parsing.IStringParser;
 import org.appliedenergistics.yoga.YogaEdge;
 import org.appliedenergistics.yoga.YogaValue;
 

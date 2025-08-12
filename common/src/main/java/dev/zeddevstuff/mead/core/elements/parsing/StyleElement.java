@@ -1,9 +1,10 @@
 package dev.zeddevstuff.mead.core.elements.parsing;
 
 import com.mojang.logging.LogUtils;
-import dev.zeddevstuff.mead.core.data.Observable;
+import dev.zeddevstuff.mead.core.data.Property;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
-import dev.zeddevstuff.mead.styling.MeadStyle;
+import dev.zeddevstuff.mead.core.parsing.MeadStyleSheetsParser;
+import dev.zeddevstuff.mead.core.styling.MeadStyle;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class StyleElement extends MeadElement implements IParsingCompleteListene
 
     @Override
     public String getTagName() { return "null"; }
-    public StyleElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+    public StyleElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
     {
         super(null, null, null, textContent);
         NullUtils.ifNotNull(attributes.get("src"), value -> src = value);
@@ -47,7 +48,7 @@ public class StyleElement extends MeadElement implements IParsingCompleteListene
     @Override
     public AbstractWidget getWidget() { return null; }
 
-    public void parsingComplete(Void ignored)
+    public void parsingComplete()
     {
         if(textContent.<String>get().isBlank())
         {
@@ -56,7 +57,7 @@ public class StyleElement extends MeadElement implements IParsingCompleteListene
         }
         else
         {
-            style = getCtx().createStyleSheetsParser().parse(textContent.get());
+            style = MeadStyleSheetsParser.parse(ctx, textContent.get());
             style.ifPresent(meadStyle -> meadStyle.applyToTree(getRoot()));
         }
     }

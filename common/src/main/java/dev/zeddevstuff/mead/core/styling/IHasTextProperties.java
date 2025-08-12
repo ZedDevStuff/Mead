@@ -1,6 +1,6 @@
-package dev.zeddevstuff.mead.interfaces;
+package dev.zeddevstuff.mead.core.styling;
 
-import dev.zeddevstuff.mead.core.data.Observable;
+import dev.zeddevstuff.mead.core.data.ObservableProperty;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
@@ -10,17 +10,17 @@ public interface IHasTextProperties
 	TextProperties textProps();
 	public class TextProperties
 	{
-		private final Observable<Component> text = new Observable<>(Component.empty());
-		public Observable<Component> text() { return text; }
-		private final Observable<Integer> textSize = new Observable<>(12);
-		public Observable<Integer> textSize() { return textSize; }
-		private final Observable<Boolean> localized = new Observable<>(false);
-		public Observable<Boolean> localized() { return localized; }
-		private final Observable<Boolean> textShadow = new Observable<>(false);
-		public Observable<Boolean> textShadow() { return textShadow; }
-		private final Observable<Integer> textScale = new Observable<>(1);
-		public Observable<Integer> textScale() { return textScale; }
-		private final Observable<Boolean> textCentered = new Observable<>(false);
+		private final ObservableProperty<Component> text = new ObservableProperty<>(Component.empty());
+		public ObservableProperty<Component> text() { return text; }
+		private final ObservableProperty<Integer> textSize = new ObservableProperty<>(12);
+		public ObservableProperty<Integer> textSize() { return textSize; }
+		private final ObservableProperty<Boolean> localized = new ObservableProperty<>(false);
+		public ObservableProperty<Boolean> localized() { return localized; }
+		private final ObservableProperty<Boolean> textShadow = new ObservableProperty<>(false);
+		public ObservableProperty<Boolean> textShadow() { return textShadow; }
+		private final ObservableProperty<Integer> textScale = new ObservableProperty<>(1);
+		public ObservableProperty<Integer> textScale() { return textScale; }
+		private final ObservableProperty<Boolean> textCentered = new ObservableProperty<>(false);
 	}
 
 	static void applyAttributes(IHasTextProperties element, HashMap<String, String> attributes)

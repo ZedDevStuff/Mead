@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.core;
 
 import dev.zeddevstuff.mead.core.elements.MeadElement;
+import dev.zeddevstuff.mead.core.styling.IHasFlavorProperty;
 import dev.zeddevstuff.mead.utils.NullUtils;
 
 import java.util.ArrayList;
@@ -18,6 +19,15 @@ public class MeadDOM
 			root.getNode().setWidth(width);
 			root.getNode().setHeight(height);
 		}
+	}
+	public void setFlavor(ElementFlavor flavor)
+	{
+		getAllElements().forEach(el -> {
+			if(el instanceof IHasFlavorProperty flavorElement)
+			{
+				flavorElement.flavor().set(flavor);
+			}
+		});
 	}
 
 	private int width = 0;

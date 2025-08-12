@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.core.elements.flow;
 
-import dev.zeddevstuff.mead.core.data.Observable;
+import dev.zeddevstuff.mead.core.data.ObservableProperty;
+import dev.zeddevstuff.mead.core.data.Property;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -11,12 +12,12 @@ import java.util.concurrent.Callable;
 
 public class IfElement extends MeadElement
 {
-	private Observable<Boolean> condition = new Observable<>(true); // Default to true if no condition is provided
+	private ObservableProperty<Boolean> condition = new ObservableProperty<>(true); // Default to true if no condition is provided
 
 	@Override
 	public String getTagName() { return "if"; }
 	@SuppressWarnings("unchecked")
-	public IfElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public IfElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		super(attributes, variables, actions, textContent);
 		NullUtils.ifNotNull(attributes.get("condition"), condition -> {
@@ -27,7 +28,7 @@ public class IfElement extends MeadElement
 				{
 					try
 					{
-						this.condition = (Observable<Boolean>) cond;
+						this.condition = (ObservableProperty<Boolean>) cond;
 						this.condition.addObserver(this::valueChanged);
 					} catch (Exception e)
 					{

@@ -1,8 +1,9 @@
-package dev.zeddevstuff.mead.minecraft;
+package dev.zeddevstuff.mead.core.minecraft;
 
-import dev.zeddevstuff.mead.core.data.Observable;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
+import dev.zeddevstuff.mead.core.data.Property;
+import dev.zeddevstuff.mead.core.parsing.MeadParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -14,7 +15,7 @@ import java.nio.file.*;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-public class MeadFileScreen extends Screen
+public class MeadHotReloadScreen extends Screen
 {
 	private final MeadContext ctx;
 	protected long start;
@@ -22,11 +23,13 @@ public class MeadFileScreen extends Screen
 	public long getCreationTime() { return end - start; }
 	public float getCreationTimeMillis() { return (float) (end - start) / 1_000_000f; }
 	protected MeadDOM dom;
-	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadFileScreen.class);
+	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadHotReloadScreen.class);
 	private final Path screenPath;
 
+	private HashMap<String, Property<?>> variables = new HashMap<>();
+	private HashMap<String, Callable<?>> actions = new HashMap<>();
 
-	public MeadFileScreen(Path screen, MeadContext ctx)
+	public MeadHotReloadScreen(Path screen, MeadContext ctx)
 	{
 		super(Component.literal("MeadScreen"));
 		this.ctx = ctx;
@@ -34,29 +37,29 @@ public class MeadFileScreen extends Screen
 		start = System.nanoTime();
 		if(screen.toFile().exists())
 		{
-			ctx.createParser().parse(tryReadResource(screen)).ifPresent(
-				root -> this.dom = new MeadDOM(root)
-			);
+			var intermediary = MeadParser.parse(tryReadResource(screen));
+            intermediary.ifPresentOrElse(
+				intermediaryDOM -> this.dom = new MeadDOM(intermediaryDOM.build(ctx, null, null)),
+				() -> this.dom = new MeadDOM(null));
 		}
 		else LOGGER.error("Mead file does not exist: {}", screen);
 		end = System.nanoTime();
         LOGGER.info("Created MeadFileScreen from file '{}' in {}ms", screen, getCreationTimeMillis());
 	}
-	public MeadFileScreen(Path screen, MeadContext ctx, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
+	public MeadHotReloadScreen(Path screen, MeadContext ctx, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
 	{
 		super(Component.literal("MeadScreen"));
 		this.ctx = ctx;
-		if(variables == null)
-			variables = new HashMap<>();
-		if(actions == null)
-			actions = new HashMap<>();
+		if(variables != null)
+			this.variables = variables;
+		if(actions != null)
+			this.actions = actions;
 		screenPath = screen;
 		start = System.nanoTime();
 		if(screen.toFile().exists())
 		{
-			ctx.createParser(variables, actions).parse(tryReadResource(screen)).ifPresent(
-				root -> this.dom = new MeadDOM(root)
-			);
+			var intermediary = MeadParser.parse(tryReadResource(screen));
+            this.dom = intermediary.map(intermediaryDOM -> new MeadDOM(intermediaryDOM.build(ctx, variables, actions))).orElseGet(() -> new MeadDOM(null));
 		}
 		else LOGGER.error("Mead file does not exist: {}", screen);
 		end = System.nanoTime();
@@ -69,6 +72,12 @@ public class MeadFileScreen extends Screen
 	{
 		dom.calculateLayout();
 		super.render(guiGraphics, i, j, f);
+	}
+
+	public void reload()
+	{
+		var intermediary = MeadParser.parse(tryReadResource(screenPath));
+        intermediary.ifPresent(intermediaryDOM -> this.dom = new MeadDOM(intermediaryDOM.build(ctx, variables, actions)));
 	}
 
 	@Override

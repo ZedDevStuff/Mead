@@ -1,8 +1,7 @@
 package dev.zeddevstuff.mead.mixin;
 
 import dev.zeddevstuff.mead.Mead;
-import dev.zeddevstuff.mead.TestMeadScreen;
-import dev.zeddevstuff.mead.minecraft.MeadFileScreen;
+import dev.zeddevstuff.mead.core.minecraft.MeadHotReloadScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -31,12 +30,12 @@ public abstract class TitleScreenMixin extends Screen
 				{
 					var actions = new HashMap<String, Callable<?>>();
 					actions.put("sayHello", () -> { System.out.println("Hello from Mead!"); return null; });
-					/*Minecraft.getInstance().setScreen(new MeadFileScreen(
+					Minecraft.getInstance().setScreen(new MeadHotReloadScreen(
 						Path.of("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead"),
 						Mead.ctx(),
 						null,
-						actions));*/
-					Minecraft.getInstance().setScreen(new TestMeadScreen());
+						actions));
+					//Minecraft.getInstance().setScreen(new TestMeadScreen());
 				} catch (Exception e)
 				{
 					throw new RuntimeException(e);

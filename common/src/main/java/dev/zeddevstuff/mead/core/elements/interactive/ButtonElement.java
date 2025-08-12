@@ -1,12 +1,13 @@
 package dev.zeddevstuff.mead.core.elements.interactive;
 
-import dev.zeddevstuff.mead.core.data.Observable;
+import dev.zeddevstuff.mead.core.data.ObservableProperty;
 import dev.zeddevstuff.mead.core.ElementFlavor;
+import dev.zeddevstuff.mead.core.data.Property;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
-import dev.zeddevstuff.mead.interfaces.IHasColorProperties;
-import dev.zeddevstuff.mead.interfaces.IHasFlavorProperty;
-import dev.zeddevstuff.mead.interfaces.IHasTextProperties;
-import dev.zeddevstuff.mead.minecraft.widgets.ButtonMeadWidget;
+import dev.zeddevstuff.mead.core.styling.IHasColorProperties;
+import dev.zeddevstuff.mead.core.styling.IHasFlavorProperty;
+import dev.zeddevstuff.mead.core.styling.IHasTextProperties;
+import dev.zeddevstuff.mead.core.minecraft.widgets.ButtonMeadWidget;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +24,9 @@ public class ButtonElement extends MeadElement implements IHasColorProperties, I
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 	public Callable<?> onClick = () -> null;
-	private final Observable<ElementFlavor> flavor = new Observable<>(ElementFlavor.VANILLA);
-	public Observable<ElementFlavor> getFlavor() { return flavor; }
-	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	private final ObservableProperty<ElementFlavor> flavor = new ObservableProperty<>(ElementFlavor.VANILLA);
+	public ObservableProperty<ElementFlavor> flavor() { return flavor; }
+	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		super(attributes, variables, actions, textContent);
 		IHasColorProperties.applyAttributes(this, attributes);

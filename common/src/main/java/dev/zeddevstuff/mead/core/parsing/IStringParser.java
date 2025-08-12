@@ -1,4 +1,4 @@
-package dev.zeddevstuff.mead.interfaces;
+package dev.zeddevstuff.mead.core.parsing;
 
 import dev.zeddevstuff.mead.core.ElementFlavor;
 import net.minecraft.util.Tuple;

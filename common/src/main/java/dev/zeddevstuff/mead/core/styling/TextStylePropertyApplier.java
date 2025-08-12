@@ -1,8 +1,7 @@
-package dev.zeddevstuff.mead.styling;
+package dev.zeddevstuff.mead.core.styling;
 
 import dev.zeddevstuff.mead.core.elements.MeadElement;
-import dev.zeddevstuff.mead.interfaces.IHasTextProperties;
-import dev.zeddevstuff.mead.interfaces.IStringParser;
+import dev.zeddevstuff.mead.core.parsing.IStringParser;
 
 public class TextStylePropertyApplier implements IMeadStylePropertyApplier
 {

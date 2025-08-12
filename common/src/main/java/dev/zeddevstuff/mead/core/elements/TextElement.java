@@ -1,10 +1,10 @@
 package dev.zeddevstuff.mead.core.elements;
 
-import dev.zeddevstuff.mead.core.data.Observable;
-import dev.zeddevstuff.mead.interfaces.IHasColorProperties;
-import dev.zeddevstuff.mead.interfaces.IHasTextProperties;
-import dev.zeddevstuff.mead.interfaces.IStringParser;
-import dev.zeddevstuff.mead.minecraft.widgets.TextMeadWidget;
+import dev.zeddevstuff.mead.core.data.Property;
+import dev.zeddevstuff.mead.core.styling.IHasColorProperties;
+import dev.zeddevstuff.mead.core.styling.IHasTextProperties;
+import dev.zeddevstuff.mead.core.parsing.IStringParser;
+import dev.zeddevstuff.mead.core.minecraft.widgets.TextMeadWidget;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.network.chat.Component;
 import org.appliedenergistics.yoga.YogaNodeType;
@@ -23,7 +23,7 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 
-	public TextElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public TextElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		super(attributes, variables, actions, textContent);
 		IHasColorProperties.applyAttributes(this, attributes);

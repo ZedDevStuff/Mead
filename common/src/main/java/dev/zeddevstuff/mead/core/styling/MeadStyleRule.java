@@ -1,4 +1,4 @@
-package dev.zeddevstuff.mead.styling;
+package dev.zeddevstuff.mead.core.styling;
 
 import java.util.List;
 

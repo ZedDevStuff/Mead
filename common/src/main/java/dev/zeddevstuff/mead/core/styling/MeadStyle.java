@@ -1,4 +1,4 @@
-package dev.zeddevstuff.mead.styling;
+package dev.zeddevstuff.mead.core.styling;
 
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.elements.MeadElement;

@@ -1,9 +1,13 @@
 package dev.zeddevstuff.mead.core.elements;
 
+import dev.zeddevstuff.mead.core.ElementFlavor;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
-import dev.zeddevstuff.mead.core.data.Observable;
-import dev.zeddevstuff.mead.interfaces.IStringParser;
+import dev.zeddevstuff.mead.core.data.ObservableProperty;
+import dev.zeddevstuff.mead.core.data.Property;
+import dev.zeddevstuff.mead.core.parsing.IStringParser;
+import dev.zeddevstuff.mead.core.styling.IHasFlavorProperty;
+import dev.zeddevstuff.mead.core.styling.LayoutStylePropertyApplier;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import org.appliedenergistics.yoga.YogaBoxSizing;
@@ -31,7 +35,7 @@ public abstract class MeadElement implements Cloneable
 	/**
 	 * Text content of the element. This is set by the MeadParser. Ignore it if you're not using it.
 	 */
-	public Observable<String> textContent = new Observable<>("");
+	public ObservableProperty<String> textContent = new ObservableProperty<>("");
 	/**
 	 * Use this as a cache
 	 */
@@ -43,7 +47,6 @@ public abstract class MeadElement implements Cloneable
 	public MeadElement getParent() { return parent; }
 	public void setParent(MeadElement parent)
 	{
-		//yogaNode.setOwner(parent.yogaNode);
 		parent.getNode().addChildAt(yogaNode, parent.getNode().getLayoutChildCount());
 		this.parent = parent;
 	}
@@ -52,14 +55,10 @@ public abstract class MeadElement implements Cloneable
 	public void setChildren(List<MeadElement> children)
 	{
 		for(MeadElement child : this.children)
-		{
 			parent.removeChild(child);
-		}
 		this.children.clear();
 		for (MeadElement child : children)
-		{
 			addChild(child);
-		}
 	}
 	public void addChild(MeadElement child)
 	{
@@ -90,7 +89,7 @@ public abstract class MeadElement implements Cloneable
 		return styles.contains(style);
 	}
 
-	public MeadElement(HashMap<String, String> attributes, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public MeadElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		this.textContent.set(textContent);
 		applyBaseProperties(this, sanitizeAttributes(attributes));
@@ -100,9 +99,19 @@ public abstract class MeadElement implements Cloneable
 	 * Override this method to sanitize layout related attributes before applying them to the element.
 	 * @return A sanitized map of attributes. If the input is null, an empty map is returned.
 	 */
-	public HashMap<String, String> sanitizeAttributes(HashMap<String, String> attributes)
+	protected HashMap<String, String> sanitizeAttributes(HashMap<String, String> attributes)
 	{
 		return attributes == null ? new HashMap<>() : attributes;
+	}
+
+	protected void setFlavor(ElementFlavor flavor)
+	{
+		if(this instanceof IHasFlavorProperty flavorable)
+		{
+			flavorable.flavor().set(flavor);
+		}
+		for(var child : children)
+			child.setFlavor(flavor);
 	}
 
 	@Override
@@ -141,6 +150,7 @@ public abstract class MeadElement implements Cloneable
 		});
 		NullUtils.ifNotNull(attributes.get("flexDirection"), value -> {
 			element.yogaNode.setFlexDirection(IStringParser.YOGA_FLEX_DIRECTION_PARSER.parse(value));
+			element.yogaNode.calculateLayout(element.getLayout().width, element.getLayout().height);
 		});
 		NullUtils.ifNotNull(attributes.get("alignItems"), value -> {
 			element.yogaNode.setAlignItems(IStringParser.YOGA_ALIGN_PARSER.parse(value));
@@ -220,9 +230,7 @@ public abstract class MeadElement implements Cloneable
 			yogaNode.setDirty(false);
 		}
 		for (var child : children)
-		{
 			child.calculateLayout();
-		}
 	}
 
 	public static class ComputedLayoutData

@@ -1,7 +1,6 @@
 package dev.zeddevstuff.mead;
 
-import dev.zeddevstuff.mead.minecraft.MeadScreen;
-import net.minecraft.resources.ResourceLocation;
+import dev.zeddevstuff.mead.core.minecraft.MeadScreen;
 
 public class TestMeadScreen extends MeadScreen
 {

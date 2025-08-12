@@ -1,4 +1,4 @@
-package dev.zeddevstuff.mead.minecraft.widgets;
+package dev.zeddevstuff.mead.core.minecraft.widgets;
 
 import dev.zeddevstuff.mead.core.elements.TextElement;
 import dev.zeddevstuff.mead.utils.NullUtils;

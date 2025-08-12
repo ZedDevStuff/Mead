@@ -1,11 +1,8 @@
-package dev.zeddevstuff.mead.minecraft.widgets;
+package dev.zeddevstuff.mead.core.minecraft.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.zeddevstuff.mead.core.ElementFlavor;
-import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.core.elements.interactive.ButtonElement;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,8 +13,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.appliedenergistics.yoga.YogaBoxSizing;
-
-import java.util.function.Supplier;
 
 public class ButtonMeadWidget extends BasicMeadWidget
 {
@@ -65,7 +60,7 @@ public class ButtonMeadWidget extends BasicMeadWidget
 		guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
-		if(buttonElement.getFlavor().get() == ElementFlavor.VANILLA)
+		if(buttonElement.flavor().get() == ElementFlavor.VANILLA)
 		{
 			guiGraphics.blitSprite(SPRITES.get(this.active, this.isHoveredOrFocused()), this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		}

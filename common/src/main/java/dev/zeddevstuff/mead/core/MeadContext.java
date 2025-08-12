@@ -1,17 +1,16 @@
 package dev.zeddevstuff.mead.core;
 
 import com.mojang.logging.LogUtils;
-import dev.zeddevstuff.mead.core.data.Observable;
-import dev.zeddevstuff.mead.core.elements.Element;
+import dev.zeddevstuff.mead.core.elements.RootElement;
 import dev.zeddevstuff.mead.core.elements.RectElement;
 import dev.zeddevstuff.mead.core.elements.TextElement;
 import dev.zeddevstuff.mead.core.elements.flow.IfElement;
 import dev.zeddevstuff.mead.core.elements.interactive.ButtonElement;
 import dev.zeddevstuff.mead.core.elements.parsing.ImportElement;
 import dev.zeddevstuff.mead.core.elements.parsing.StyleElement;
-import dev.zeddevstuff.mead.parsing.MeadParser;
-import dev.zeddevstuff.mead.parsing.MeadStyleSheetsParser;
-import dev.zeddevstuff.mead.styling.*;
+import dev.zeddevstuff.mead.core.parsing.MeadParser;
+import dev.zeddevstuff.mead.core.parsing.MeadStyleSheetsParser;
+import dev.zeddevstuff.mead.core.styling.*;
 import dev.zeddevstuff.mead.utils.NullUtils;
 import org.slf4j.Logger;
 
@@ -19,7 +18,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
@@ -61,21 +59,6 @@ public class MeadContext
         loadStyleSheets();
     }
 
-    private final MeadParser defaultMeadParser = createParser();
-    public MeadParser createParser()
-    {
-        return new MeadParser(this);
-    }
-    public MeadParser createParser(HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
-    {
-        return new MeadParser(this, variables, actions);
-    }
-    private final MeadStyleSheetsParser defaultStyleSheetsParser = createStyleSheetsParser();
-    public MeadStyleSheetsParser createStyleSheetsParser()
-    {
-        return new MeadStyleSheetsParser(this);
-    }
-
     private void registerDefaults()
     {
         registerDefaultFactories();
@@ -84,7 +67,7 @@ public class MeadContext
     }
     private void registerDefaultFactories()
     {
-        elementFactories.register("Mead", Element::new);
+        elementFactories.register("Mead", RootElement::new);
         // Parsing
         elementFactories.register("Import", ImportElement::new);
         elementFactories.register("Style", StyleElement::new);
@@ -126,7 +109,7 @@ public class MeadContext
                                     {
                                         String relativePath = entry.getName().replace("assets/" + modid + "/ui/", "");
                                         String content = new String(inputStream.readAllBytes());
-                                        defaultMeadParser.parseIntermediary(content)
+                                        MeadParser.parse(content)
                                             .ifPresent(intermediary -> intermediaryDOMs.put(relativePath, intermediary));
                                     } catch (Exception ignored) {}
                                 });
@@ -165,7 +148,7 @@ public class MeadContext
                                         {
                                             String relativePath = entry.getName().replace("assets/" + modid + "/ui/", "");
                                             String content = new String(inputStream.readAllBytes());
-                                            var result = defaultStyleSheetsParser.parse(content);
+                                            var result = MeadStyleSheetsParser.parse(this, content);
                                             result.ifPresent(style -> styleSheets.put(relativePath, style));
                                         } catch (Exception ignored) {}
                                     });

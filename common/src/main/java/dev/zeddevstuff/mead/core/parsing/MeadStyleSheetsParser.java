@@ -1,8 +1,8 @@
-package dev.zeddevstuff.mead.parsing;
+package dev.zeddevstuff.mead.core.parsing;
 
 import dev.zeddevstuff.mead.core.MeadContext;
-import dev.zeddevstuff.mead.styling.MeadStyle;
-import dev.zeddevstuff.mead.styling.MeadStyleRule;
+import dev.zeddevstuff.mead.core.styling.MeadStyle;
+import dev.zeddevstuff.mead.core.styling.MeadStyleRule;
 import net.minecraft.util.Tuple;
 
 import java.util.ArrayList;
@@ -17,12 +17,7 @@ public class MeadStyleSheetsParser
     private final static Pattern NEWLINE_PATTERN = Pattern.compile("\\r?\\n");
     private final static Pattern RULE_PATTERN = Pattern.compile("(?<rule>\\.?[^ \\r\\s]+)\\s*\\{(?<content>(?:[\\r\\n]|[^}]*)*)}", Pattern.DOTALL);
 
-    private final MeadContext ctx;
-    public MeadStyleSheetsParser(MeadContext ctx)
-    {
-        this.ctx = ctx;
-    }
-    public Optional<MeadStyle> parse(String styleSheet)
+    public static Optional<MeadStyle> parse(MeadContext ctx, String styleSheet)
     {
         var cleanedStyleSheet = removeComments(styleSheet);
         cleanedStyleSheet = flatten(cleanedStyleSheet);
@@ -47,7 +42,7 @@ public class MeadStyleSheetsParser
         }
         return Optional.of(style);
     }
-    private String removeComments(String input)
+    private static String removeComments(String input)
     {
         if (input == null || input.isEmpty())
         {
@@ -56,7 +51,7 @@ public class MeadStyleSheetsParser
         return COMMENT_PATTERN.matcher(input).replaceAll("");
     }
     // Remove all newlines but preserve whitespace
-    private String flatten(String input)
+    private static String flatten(String input)
     {
         if (input == null || input.isEmpty())
         {
@@ -64,7 +59,7 @@ public class MeadStyleSheetsParser
         }
         return NEWLINE_PATTERN.matcher(input).replaceAll("");
     }
-    private List<Tuple<String, String>> extractRules(String styleSheet)
+    private static List<Tuple<String, String>> extractRules(String styleSheet)
     {
         if (styleSheet == null || styleSheet.isEmpty())
         {
@@ -77,7 +72,7 @@ public class MeadStyleSheetsParser
                 ))
             .toList();
     }
-    private String[] extractProperties(String ruleContent)
+    private static String[] extractProperties(String ruleContent)
     {
         if (ruleContent == null || ruleContent.isEmpty())
         {

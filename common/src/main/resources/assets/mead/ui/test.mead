@@ -1,8 +1,11 @@
-<Mead>
+<Mead flavor="styled">
     <Style src="style/mead.mss" />
-    <!-- Defaults to flavor "vanilla" -->
-    <Button>Vanilla</Button>
-    <Button flavor="styled">Styled</Button>
-    <Button action="sayHello">Click me</Button>
-    <Text width="100" textColor="#FFAAAA">Hello</Text>
+    <Rect width="100%" height="100%" backgroundColor="#fff">
+        <Rect width="100%" height="20" backgroundColor="#f88" />
+        <!-- Why the fuck is it not becoming a row????? -->
+        <Rect width="100%" flexGrow="1" flexDirection="row" backgroundColor="#88f">
+            <Rect width="10%" height="50%" backgroundColor="#8f8"/>
+            <Button action="sayHello">Click me</Button>
+        </Rect>
+    </Rect>
 </Mead>

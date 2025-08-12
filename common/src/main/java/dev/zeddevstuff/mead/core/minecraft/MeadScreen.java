@@ -1,9 +1,9 @@
-package dev.zeddevstuff.mead.minecraft;
+package dev.zeddevstuff.mead.core.minecraft;
 
 import com.mojang.logging.LogUtils;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.MeadDOM;
-import dev.zeddevstuff.mead.core.data.Observable;
+import dev.zeddevstuff.mead.core.data.Property;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,7 +21,7 @@ public class MeadScreen extends Screen
 	public long getCreationTime() { return end - start; }
 	public float getCreationTimeMillis() { return (float) (end - start) / 1_000_000f; }
 	protected MeadDOM dom;
-	public MeadScreen(String path, MeadContext ctx, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadScreen(String path, MeadContext ctx, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions)
 	{
 		super(Component.literal("MeadScreen"));
 		if(variables == null)
@@ -32,12 +32,11 @@ public class MeadScreen extends Screen
 		start = System.nanoTime();
 		var intermediary = ctx.getIntermediaryDOM(path);
 		if(intermediary.isPresent())
-		{
 			this.dom = new MeadDOM(intermediary.get().build(ctx, variables, actions));
-		}
-		else this.dom = new MeadDOM(null);
+		else
+			this.dom = new MeadDOM(null);
 		end = System.nanoTime();
-		LOGGER.info("Created MeadScreen from cache '{}' in {}ms", path, getCreationTimeMillis());
+		LOGGER.info("Created MeadScreen from cached '{}' in {}ms", path, getCreationTimeMillis());
 		resize(Minecraft.getInstance(), Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 	}
 

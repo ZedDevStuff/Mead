@@ -1,10 +1,11 @@
 package dev.zeddevstuff.mead.core;
 
 import com.mojang.logging.LogUtils;
-import dev.zeddevstuff.mead.core.data.Observable;
+import dev.zeddevstuff.mead.core.data.ObservableProperty;
+import dev.zeddevstuff.mead.core.data.Property;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.core.elements.parsing.IParsingCompleteListener;
-import dev.zeddevstuff.mead.parsing.MeadParser;
+import dev.zeddevstuff.mead.core.parsing.MeadParser;
 import dev.zeddevstuff.mead.utils.SingleEvent;
 import org.slf4j.Logger;
 
@@ -47,7 +48,7 @@ public class IntermediaryDOM
         return element;
     }
 
-    public MeadElement build(MeadContext ctx, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
+    public MeadElement build(MeadContext ctx, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions)
     {
         if(root == null)
         {
@@ -63,7 +64,7 @@ public class IntermediaryDOM
         parsingCompleteEvent.fire(key, null);
         return rootElement;
     }
-    private MeadElement buildRecursive(MeadContext ctx, IntermediaryElement el, MeadElement parent, HashMap<String, Observable<?>> variables, HashMap<String, Callable<?>> actions)
+    private MeadElement buildRecursive(MeadContext ctx, IntermediaryElement el, MeadElement parent, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions)
     {
         MeadParser.IMeadElementFactory factory = ctx.elementFactories.get(el.getTagName());
         if(factory == null)
@@ -79,7 +80,7 @@ public class IntermediaryDOM
         }
         meadElement.setCtx(ctx);
         if(meadElement instanceof IParsingCompleteListener elListener)
-            parsingCompleteEvent.addListener(elListener::parsingComplete);
+            parsingCompleteEvent.addListener((ignored) -> elListener.parsingComplete());
         if(parent != null)
             parent.addChild(meadElement);
         for(IntermediaryElement child : el.children)
