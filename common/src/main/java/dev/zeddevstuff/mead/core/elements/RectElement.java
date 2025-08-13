@@ -19,7 +19,6 @@ public class RectElement extends MeadElement implements IHasColorProperties
 	public RectElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
 		super(attributes, variables, actions, textContent);
-		yogaNode.setFlexDirection(YogaFlexDirection.COLUMN);
 		IHasColorProperties.applyAttributes(this, attributes);
 		widget = new RectMeadWidget(this);
 	}

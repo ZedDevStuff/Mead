@@ -30,6 +30,10 @@ public abstract class TitleScreenMixin extends Screen
 				{
 					var actions = new HashMap<String, Callable<?>>();
 					actions.put("sayHello", () -> { System.out.println("Hello from Mead!"); return null; });
+					actions.put("exitScreen", () -> {
+						Minecraft.getInstance().setScreen(null);
+						return null;
+					});
 					Minecraft.getInstance().setScreen(new MeadHotReloadScreen(
 						Path.of("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead"),
 						Mead.ctx(),
