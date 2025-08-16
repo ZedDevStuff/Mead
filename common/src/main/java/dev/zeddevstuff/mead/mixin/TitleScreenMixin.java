@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.mixin;
 
 import dev.zeddevstuff.mead.Mead;
+import dev.zeddevstuff.mead.TestMeadScreen;
 import dev.zeddevstuff.mead.core.minecraft.MeadHotReloadScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -37,7 +38,6 @@ public abstract class TitleScreenMixin extends Screen
 					Minecraft.getInstance().setScreen(new MeadHotReloadScreen(
 						Path.of("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead"),
 						Mead.ctx(),
-						null,
 						actions));
 					//Minecraft.getInstance().setScreen(new TestMeadScreen());
 				} catch (Exception e)

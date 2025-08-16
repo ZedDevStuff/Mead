@@ -33,8 +33,8 @@ public class MeadContext
     private final String modid;
     private final Class<?> modClass;
 
-    private final HashMap<String, IntermediaryDOM> intermediaryDOMs = new HashMap<>();
-    public Optional<IntermediaryDOM> getIntermediaryDOM(String path)
+    private final HashMap<String, IntermediateDOM> intermediaryDOMs = new HashMap<>();
+    public Optional<IntermediateDOM> getIntermediaryDOM(String path)
     {
         return Optional.ofNullable(intermediaryDOMs.get(path));
     }
@@ -54,30 +54,62 @@ public class MeadContext
         checkModClass(modClass);
         this.modid = modid;
         this.modClass = modClass;
-        registerDefaults();
+        registerDefaults(false);
+        loadMeadDocuments();
+        loadStyleSheets();
+    }
+    /**
+     * Initializes the Mead context with the given mod ID and mod class.
+     * @param modid Your mod ID. Make sure it is the same as your "assets" namespace.
+     * @param htmlLike When true, will rename some elements to have their tag match the closest HTML element
+     * @throws IllegalArgumentException If the mod class is null or does not appear to be a mod.
+     */
+    public MeadContext(String modid, Class<?> modClass, boolean htmlLike) throws IllegalArgumentException
+    {
+        checkModClass(modClass);
+        this.modid = modid;
+        this.modClass = modClass;
+        registerDefaults(htmlLike);
         loadMeadDocuments();
         loadStyleSheets();
     }
 
-    private void registerDefaults()
+    private void registerDefaults(boolean htmlLike)
     {
-        registerDefaultFactories();
+        registerDefaultFactories(htmlLike);
         registerDefaultStylePropertyAppliers();
         registerMeadStyle();
     }
-    private void registerDefaultFactories()
+    private void registerDefaultFactories(boolean htmlLike)
     {
-        elementFactories.register("Mead", RootElement::new);
-        // Parsing
-        elementFactories.register("Import", ImportElement::new);
-        elementFactories.register("Style", StyleElement::new);
-        // Elements
-        elementFactories.register("Rect", RectElement::new);
-        elementFactories.register("Text", TextElement::new);
-        // Interactive elements
-        elementFactories.register("Button", ButtonElement::new);
-        // Flow control elements
-        elementFactories.register("If", IfElement::new);
+        if(!htmlLike)
+        {
+            elementFactories.register("Mead", RootElement::new);
+            // Parsing
+            elementFactories.register("Import", ImportElement::new);
+            elementFactories.register("Style", StyleElement::new);
+            // Elements
+            elementFactories.register("Rect", RectElement::new);
+            elementFactories.register("Text", TextElement::new);
+            // Interactive elements
+            elementFactories.register("Button", ButtonElement::new);
+            // Flow control elements
+            elementFactories.register("If", IfElement::new);
+        }
+        else
+        {
+            elementFactories.register("html", RootElement::new);
+            // Parsing
+            elementFactories.register("import", ImportElement::new);
+            elementFactories.register("style", StyleElement::new);
+            // Elements
+            elementFactories.register("div", RectElement::new);
+            elementFactories.register("p", TextElement::new);
+            // Interactive elements
+            elementFactories.register("button", ButtonElement::new);
+            // Flow control elements
+            elementFactories.register("if", IfElement::new);
+        }
     }
     private void registerDefaultStylePropertyAppliers()
     {

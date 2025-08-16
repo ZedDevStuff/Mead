@@ -21,14 +21,21 @@ public class ButtonElement extends MeadElement implements IHasColorProperties, I
 	public String getTagName() { return "button"; }
 	protected final ColorProperties colorProps = new ColorProperties();
 	public ColorProperties colorProps() { return colorProps; }
+	protected final ColorProperties hoverColorProps = new ColorProperties();
+	public ColorProperties hoverColorProps() { return hoverColorProps; }
+	protected final ColorProperties activeColorProps = new ColorProperties();
+	public ColorProperties activeColorProps() { return activeColorProps; }
+	protected final ColorProperties disabledColorProps = new ColorProperties();
+	public ColorProperties disabledColorProps() { return disabledColorProps; }
+
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 	public Callable<?> onClick = () -> null;
 	private final ObservableProperty<ElementFlavor> flavor = new ObservableProperty<>(ElementFlavor.VANILLA);
 	public ObservableProperty<ElementFlavor> flavor() { return flavor; }
-	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public ButtonElement(HashMap<String, String> attributes, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
-		super(attributes, variables, actions, textContent);
+		super(attributes, actions, textContent);
 		IHasColorProperties.applyAttributes(this, attributes);
 		IHasFlavorProperty.applyAttributes(this, attributes);
 		IHasTextProperties.applyAttributes(this, attributes);

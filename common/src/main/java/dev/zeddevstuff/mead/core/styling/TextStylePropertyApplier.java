@@ -6,7 +6,7 @@ import dev.zeddevstuff.mead.core.parsing.IStringParser;
 public class TextStylePropertyApplier implements IMeadStylePropertyApplier
 {
 	@Override
-	public void applyStyleProperty(MeadStyleRule.MeadStyleProperty property, MeadElement target)
+	public void applyStyleProperty(MeadStyleRule rule, MeadStyleRule.MeadStyleProperty property, MeadElement target)
 	{
 		if(target instanceof IHasTextProperties el)
 		{

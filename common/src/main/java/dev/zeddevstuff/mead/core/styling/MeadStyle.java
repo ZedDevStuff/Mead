@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MeadStyle
@@ -21,10 +22,11 @@ public class MeadStyle
 		this.ctx = ctx;
 		this.rules = new ArrayList<>();
 	}
-	public MeadStyle(@NotNull MeadContext ctx, List<MeadStyleRule> rules)
+	public MeadStyle(@NotNull MeadContext ctx, ArrayList<MeadStyleRule> rules)
 	{
 		this.ctx = ctx;
 		this.rules = new ArrayList<>(rules);
+		this.rules.sort(Comparator.comparingInt(a -> a.state.ordinal()));
 	}
 
 	public void addRule(MeadStyleRule rule)
@@ -33,7 +35,8 @@ public class MeadStyle
 		{
 			throw new IllegalArgumentException("Rule cannot be null.");
 		}
-		rules.add(rule);
+		this.rules.add(rule);
+		this.rules.sort(Comparator.comparingInt(a -> a.state.ordinal()));
 	}
 	// This isn't by any means the most efficient way to apply styles, but it is simple and works
 	public void applyTo(MeadElement element)
@@ -46,7 +49,7 @@ public class MeadStyle
 				for(var property : rule.properties)
 				{
 					ctx.stylePropertyAppliers.values()
-						.forEach(applier -> applier.applyStyleProperty(property, element));
+						.forEach(applier -> applier.applyStyleProperty(rule, property, element));
 				}
 			}
 			else if(rule.targetType == MeadStyleRule.TargetType.STYLE && element.hasStyle(rule.target))
@@ -54,7 +57,7 @@ public class MeadStyle
 				for(var property : rule.properties)
 				{
 					ctx.stylePropertyAppliers.values()
-						.forEach(applier -> applier.applyStyleProperty(property, element));
+						.forEach(applier -> applier.applyStyleProperty(rule, property, element));
 				}
 			}
 		}

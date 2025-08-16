@@ -21,18 +21,16 @@ public class MeadScreen extends Screen
 	public long getCreationTime() { return end - start; }
 	public float getCreationTimeMillis() { return (float) (end - start) / 1_000_000f; }
 	protected MeadDOM dom;
-	public MeadScreen(String path, MeadContext ctx, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions)
+	public MeadScreen(String path, MeadContext ctx, HashMap<String, Callable<?>> actions)
 	{
 		super(Component.literal("MeadScreen"));
-		if(variables == null)
-			variables = new HashMap<>();
 		if(actions == null)
 			actions = new HashMap<>();
 
 		start = System.nanoTime();
 		var intermediary = ctx.getIntermediaryDOM(path);
 		if(intermediary.isPresent())
-			this.dom = new MeadDOM(intermediary.get().build(ctx, variables, actions));
+			this.dom = new MeadDOM(intermediary.get().build(ctx, actions));
 		else
 			this.dom = new MeadDOM(null);
 		end = System.nanoTime();

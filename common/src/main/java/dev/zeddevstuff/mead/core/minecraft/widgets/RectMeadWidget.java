@@ -16,21 +16,21 @@ public class RectMeadWidget extends BasicMeadWidget
 	{
 		if (!(meadElement instanceof RectElement div))
 			return;
-		if(div.getNode().getBoxSizing() == YogaBoxSizing.BORDER_BOX)
+		if(div.layout().boxSizing().get() == YogaBoxSizing.BORDER_BOX)
 		{
-			if (div.getLayout().width > 0 || div.getLayout().height > 0)
-				guiGraphics.fill(div.getLayout().x, div.getLayout().y, div.getLayout().x + div.getLayout().width, div.getLayout().y + div.getLayout().height, div.colorProps().borderColor().get());
-			guiGraphics.fill(div.getLayout().innerX, div.getLayout().innerY, div.getLayout().innerX + div.getLayout().innerWidth, div.getLayout().innerY + div.getLayout().innerHeight, div.colorProps().backgroundColor().get());
+			if (div.computedLayout().width > 0 || div.computedLayout().height > 0)
+				guiGraphics.fill(div.computedLayout().x, div.computedLayout().y, div.computedLayout().x + div.computedLayout().width, div.computedLayout().y + div.computedLayout().height, div.colorProps().borderColor().get());
+			guiGraphics.fill(div.computedLayout().innerX, div.computedLayout().innerY, div.computedLayout().innerX + div.computedLayout().innerWidth, div.computedLayout().innerY + div.computedLayout().innerHeight, div.colorProps().backgroundColor().get());
 		}
 		else
 		{
-			var x = div.getLayout().x - div.getLayout().borderLeft;
-			var y = div.getLayout().y - div.getLayout().borderTop;
-			var innerX = div.getLayout().innerX - div.getLayout().borderLeft;
-			var innerY = div.getLayout().innerY - div.getLayout().borderTop;
-			if (div.getLayout().width > 0 || div.getLayout().height > 0)
-				guiGraphics.fill(x, y, x + div.getLayout().width, y + div.getLayout().height, div.colorProps().borderColor().get());
-			guiGraphics.fill(innerX, innerY, innerX + div.getLayout().innerWidth, innerY + div.getLayout().innerHeight, div.colorProps().backgroundColor().get());
+			var x = div.computedLayout().x - div.computedLayout().borderLeft;
+			var y = div.computedLayout().y - div.computedLayout().borderTop;
+			var innerX = div.computedLayout().innerX - div.computedLayout().borderLeft;
+			var innerY = div.computedLayout().innerY - div.computedLayout().borderTop;
+			if (div.computedLayout().width > 0 || div.computedLayout().height > 0)
+				guiGraphics.fill(x, y, x + div.computedLayout().width, y + div.computedLayout().height, div.colorProps().borderColor().get());
+			guiGraphics.fill(innerX, innerY, innerX + div.computedLayout().innerWidth, innerY + div.computedLayout().innerHeight, div.colorProps().backgroundColor().get());
 		}
 	}
 }

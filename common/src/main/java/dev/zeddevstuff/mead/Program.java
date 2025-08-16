@@ -2,6 +2,7 @@ package dev.zeddevstuff.mead;
 
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.data.ReflectedProperty;
+import org.appliedenergistics.yoga.YogaNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +22,10 @@ public class Program
 //		File file = new File("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead");
 //		String fileContent = Files.readString(file.toPath());
 //		var parsed = ctx.createParser().parse(fileContent);
-		File file = new File("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead");
-		ReflectedProperty property = new ReflectedProperty(file, "toPath().getFileName()");
-		System.out.println(property.get());
+//		File file = new File("C:\\Users\\kouam\\Documents\\Minecraft Mods\\Mead\\common\\src\\main\\resources\\assets\\mead\\ui\\test.mead");
+//		ReflectedProperty property = new ReflectedProperty(file, "toPath().getFileName()");
+//		System.out.println(property.get());
+		YogaNode node = new YogaNode();
+		System.out.println(YogaNodePrinter.stringify(node));
 	}
 }

@@ -1,6 +1,7 @@
 package dev.zeddevstuff.mead.core.parsing;
 
 import dev.zeddevstuff.mead.core.ElementFlavor;
+import dev.zeddevstuff.mead.core.data.DataSource;
 import net.minecraft.util.Tuple;
 import org.appliedenergistics.yoga.*;
 import org.appliedenergistics.yoga.style.StyleLength;
@@ -8,6 +9,7 @@ import org.appliedenergistics.yoga.style.StyleSizeLength;
 
 public interface IStringParser<T>
 {
+
 	T parse(String input);
 
 	IStringParser<String> STRING_PARSER = input -> input;
@@ -47,6 +49,16 @@ public interface IStringParser<T>
             case "false", "no", "0" -> false;
             default -> false; // or throw an exception, or return a default value
         };
+	};
+
+	IStringParser<String> PROPERTY_PARSER = input -> {
+		if (input == null || input.isEmpty()) {
+			return "";
+		}
+		if (input.startsWith("{") && input.endsWith("}")) {
+			return input.substring(1, input.length() - 1).trim();
+		}
+		return "";
 	};
 
 	// region Yoga stuff
@@ -94,7 +106,14 @@ public interface IStringParser<T>
 		if("border".equals(input)) return YogaBoxSizing.BORDER_BOX;
 		else return YogaBoxSizing.CONTENT_BOX;
 	};
-	IStringParser<YogaFlexDirection> YOGA_FLEX_DIRECTION_PARSER = input -> switch (input)
+	IStringParser<YogaDirection> YOGA_DIRECTION_PARSER = input -> switch (input.toLowerCase())
+	{
+		case "ltr" -> YogaDirection.LTR;
+		case "inherit" -> YogaDirection.INHERIT;
+		case "rtl" -> YogaDirection.RTL;
+		default -> YogaDirection.LTR; // Default to LTR if not recognized
+	};
+	IStringParser<YogaFlexDirection> YOGA_FLEX_DIRECTION_PARSER = input -> switch (input.toLowerCase())
 	{
 		case "row" -> YogaFlexDirection.ROW;
 		case "column" -> YogaFlexDirection.COLUMN;
@@ -162,6 +181,13 @@ public interface IStringParser<T>
 		case "space-around" -> YogaJustify.SPACE_AROUND;
 		case "space-evenly" -> YogaJustify.SPACE_EVENLY;
 		default -> YogaJustify.FLEX_START; // Default to FLEX_START if not recognized
+	};
+	IStringParser<YogaWrap> FLEX_WRAP_PARSER = input -> switch (input.toLowerCase())
+	{
+		case "wrap" -> YogaWrap.WRAP;
+		case "no-wrap" -> YogaWrap.NO_WRAP;
+		case "wrap-reverse" -> YogaWrap.WRAP_REVERSE;
+		default -> YogaWrap.NO_WRAP; // Default to NO_WRAP if not recognized
 	};
 	@SuppressWarnings("unchecked")
 	IStringParser<Tuple<YogaEdge, StyleLength>[]> YOGA_EDGE_LENGTH_PARSER = input -> {
@@ -234,6 +260,31 @@ public interface IStringParser<T>
 		else
 		{
 			return new Tuple[0];
+		}
+	};
+	@SuppressWarnings("unchecked")
+	IStringParser<StyleLength[]> YOGA_GAP_PARSER = input -> {
+		String[] parts = input.split(",");
+		if(parts.length == 1)
+		{
+			var value = STYLE_LENGTH_PARSER.parse(parts[0]);
+			return new StyleLength[] {
+				value,
+				value
+			};
+		}
+		if(parts.length == 2)
+		{
+			var horizontal = STYLE_LENGTH_PARSER.parse(parts[0].trim());
+			var vertical = STYLE_LENGTH_PARSER.parse(parts[1].trim());
+			return new StyleLength[] {
+				horizontal,
+				vertical
+			};
+		}
+		else
+		{
+			return new StyleLength[0];
 		}
 	};
 	IStringParser<YogaPositionType> YOGA_POSITION_TYPE_PARSER = input -> switch (input.toLowerCase())

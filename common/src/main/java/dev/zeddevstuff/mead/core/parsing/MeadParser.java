@@ -1,7 +1,6 @@
 package dev.zeddevstuff.mead.core.parsing;
 
-import dev.zeddevstuff.mead.core.IntermediaryDOM;
-import dev.zeddevstuff.mead.core.data.Property;
+import dev.zeddevstuff.mead.core.IntermediateDOM;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +37,12 @@ public class MeadParser
 			throw new RuntimeException("Failed to initialize DocumentBuilder", e);
 		}
 	}
-	public static Optional<IntermediaryDOM> parse(String xml)
+	public static Optional<IntermediateDOM> parse(String xml)
 	{
 		try
 		{
 			Document document = documentBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
-			var intermediary = new IntermediaryDOM(document.getDocumentElement());
+			var intermediary = new IntermediateDOM(document.getDocumentElement());
 			return Optional.of(intermediary);
 		}
 		catch (IOException | SAXException e)
@@ -55,6 +54,6 @@ public class MeadParser
 
 	public interface IMeadElementFactory
 	{
-		MeadElement createElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, String textContent);
+		MeadElement createElement(HashMap<String, String> attributes, HashMap<String, Callable<?>> actions, String textContent);
 	}
 }

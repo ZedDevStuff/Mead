@@ -23,9 +23,9 @@ public class RootElement extends MeadElement implements IHasFlavorProperty, IPar
 	private final ObservableProperty<ElementFlavor> flavor = new ObservableProperty<>(ElementFlavor.STYLED);
 	public ObservableProperty<ElementFlavor> flavor() { return flavor; }
 
-	public RootElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public RootElement(HashMap<String, String> attributes, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
-		super(attributes, variables, actions, textContent);
+		super(attributes, actions, textContent);
 		NullUtils.ifNotNull(attributes.get("flavor"), attr -> {
 			flavor.set(IStringParser.FLAVOR_PARSER.parse(attr));
 		});

@@ -4,5 +4,5 @@ import dev.zeddevstuff.mead.core.elements.MeadElement;
 
 public interface IMeadStylePropertyApplier
 {
-	void applyStyleProperty(MeadStyleRule.MeadStyleProperty rule, MeadElement target);
+	void applyStyleProperty(MeadStyleRule rule, MeadStyleRule.MeadStyleProperty prop, MeadElement target);
 }

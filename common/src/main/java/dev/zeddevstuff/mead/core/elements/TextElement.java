@@ -20,12 +20,19 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 
 	protected final ColorProperties colorProps = new ColorProperties();
 	public ColorProperties colorProps() { return colorProps; }
+	protected final ColorProperties hoverColorProps = new ColorProperties();
+	public ColorProperties hoverColorProps() { return hoverColorProps; }
+	protected final ColorProperties activeColorProps = new ColorProperties();
+	public ColorProperties activeColorProps() { return activeColorProps; }
+	protected final ColorProperties disabledColorProps = new ColorProperties();
+	public ColorProperties disabledColorProps() { return disabledColorProps; }
+
 	protected final TextProperties textProps = new TextProperties();
 	public TextProperties textProps() { return textProps; }
 
-	public TextElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+	public TextElement(HashMap<String, String> attributes, HashMap<String, Callable<?>> actions, @NotNull String textContent)
 	{
-		super(attributes, variables, actions, textContent);
+		super(attributes, actions, textContent);
 		IHasColorProperties.applyAttributes(this, attributes);
 		IHasTextProperties.applyAttributes(this, attributes);
 		yogaNode.setNodeType(YogaNodeType.TEXT);
@@ -44,10 +51,10 @@ public class TextElement extends MeadElement implements IHasColorProperties, IHa
 		this.textContent.addObserver(this::updateText);
 		if(!textContent.isBlank())
 			this.updateText(textContent);
-		if(getNode().getLayoutWidth() == 0 || Float.isNaN(getNode().getLayoutWidth()))
-			getNode().setWidth(100);
-		if(getNode().getLayoutWidth() == 0 || Float.isNaN(getNode().getLayoutWidth()))
-			getNode().setHeight(20);
+		if(yogaNode.getLayoutWidth() == 0 || Float.isNaN(yogaNode.getLayoutWidth()))
+			yogaNode.setWidth(100);
+		if(yogaNode.getLayoutWidth() == 0 || Float.isNaN(yogaNode.getLayoutWidth()))
+			yogaNode.setHeight(20);
 		widget = new TextMeadWidget(this);
 	}
 

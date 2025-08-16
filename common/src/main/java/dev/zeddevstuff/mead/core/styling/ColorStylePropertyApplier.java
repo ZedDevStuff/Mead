@@ -7,13 +7,8 @@ import java.util.HashMap;
 public class ColorStylePropertyApplier implements IMeadStylePropertyApplier
 {
 	@Override
-	public void applyStyleProperty(MeadStyleRule.MeadStyleProperty property, MeadElement target)
+	public void applyStyleProperty(MeadStyleRule rule, MeadStyleRule.MeadStyleProperty prop, MeadElement target)
 	{
-		if(target instanceof IHasColorProperties el)
-		{
-			IHasColorProperties.applyAttributes(el, new HashMap<>() {{
-				put(property.name(), property.value());
-			}});
-		}
+		IHasColorProperties.applyStyleRule(rule, prop, target);
 	}
 }

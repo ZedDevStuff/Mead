@@ -54,8 +54,8 @@ public class ButtonMeadWidget extends BasicMeadWidget
 		if(!(meadElement instanceof ButtonElement buttonElement))
 			return;
 		this.setMessage(buttonElement.textProps().text().get());
-		this.setPosition(buttonElement.getLayout().x, buttonElement.getLayout().y);
-		this.setSize(buttonElement.getLayout().width, buttonElement.getLayout().height);
+		this.setPosition(buttonElement.computedLayout().x, buttonElement.computedLayout().y);
+		this.setSize(buttonElement.computedLayout().width, buttonElement.computedLayout().height);
 		Minecraft minecraft = Minecraft.getInstance();
 		guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
@@ -66,33 +66,33 @@ public class ButtonMeadWidget extends BasicMeadWidget
 		}
 		else
 		{
-			if(buttonElement.getNode().getBoxSizing() == YogaBoxSizing.BORDER_BOX)
+			if(buttonElement.layout().boxSizing().get() == YogaBoxSizing.BORDER_BOX)
 			{
-				if (buttonElement.getLayout().width > 0 || buttonElement.getLayout().height > 0)
+				if (buttonElement.computedLayout().width > 0 || buttonElement.computedLayout().height > 0)
 					guiGraphics.fill(
-						buttonElement.getLayout().x, buttonElement.getLayout().y,
-						buttonElement.getLayout().x + buttonElement.getLayout().width, buttonElement.getLayout().y + buttonElement.getLayout().height,
-						buttonElement.colorProps().getBorderColor(isActive(), isHovered(), isFocused()));
+						buttonElement.computedLayout().x, buttonElement.computedLayout().y,
+						buttonElement.computedLayout().x + buttonElement.computedLayout().width, buttonElement.computedLayout().y + buttonElement.computedLayout().height,
+						buttonElement.getBorderColor(isActive(), isHovered(), isFocused()));
 				guiGraphics.fill(
-					buttonElement.getLayout().innerX, buttonElement.getLayout().innerY,
-					buttonElement.getLayout().innerX + buttonElement.getLayout().innerWidth, buttonElement.getLayout().innerY + buttonElement.getLayout().innerHeight,
-					buttonElement.colorProps().getBackgroundColor(isActive(), isHovered(), isFocused()));
+					buttonElement.computedLayout().innerX, buttonElement.computedLayout().innerY,
+					buttonElement.computedLayout().innerX + buttonElement.computedLayout().innerWidth, buttonElement.computedLayout().innerY + buttonElement.computedLayout().innerHeight,
+					buttonElement.getBackgroundColor(isActive(), isHovered(), isFocused()));
 			}
 			else
 			{
-				var x = buttonElement.getLayout().x - buttonElement.getLayout().borderLeft;
-				var y = buttonElement.getLayout().y - buttonElement.getLayout().borderTop;
-				var innerX = buttonElement.getLayout().innerX - buttonElement.getLayout().borderLeft;
-				var innerY = buttonElement.getLayout().innerY - buttonElement.getLayout().borderTop;
-				if (buttonElement.getLayout().width > 0 || buttonElement.getLayout().height > 0)
+				var x = buttonElement.computedLayout().x - buttonElement.computedLayout().borderLeft;
+				var y = buttonElement.computedLayout().y - buttonElement.computedLayout().borderTop;
+				var innerX = buttonElement.computedLayout().innerX - buttonElement.computedLayout().borderLeft;
+				var innerY = buttonElement.computedLayout().innerY - buttonElement.computedLayout().borderTop;
+				if (buttonElement.computedLayout().width > 0 || buttonElement.computedLayout().height > 0)
 					guiGraphics.fill(
 						x, y,
-						x + buttonElement.getLayout().width, y + buttonElement.getLayout().height,
-						buttonElement.colorProps().getBorderColor(isActive(), isHovered(), isFocused()));
+						x + buttonElement.computedLayout().width, y + buttonElement.computedLayout().height,
+						buttonElement.getBorderColor(isActive(), isHovered(), isFocused()));
 				guiGraphics.fill(
 					innerX, innerY,
-					innerX + buttonElement.getLayout().innerWidth, innerY + buttonElement.getLayout().innerHeight,
-					buttonElement.colorProps().getBackgroundColor(isActive(), isHovered(), isFocused()));
+					innerX + buttonElement.computedLayout().innerWidth, innerY + buttonElement.computedLayout().innerHeight,
+					buttonElement.getBackgroundColor(isActive(), isHovered(), isFocused()));
 			}
 		}
 		
@@ -114,6 +114,13 @@ public class ButtonMeadWidget extends BasicMeadWidget
 	public void onRelease(double d, double e)
 	{
 		setFocused(false);
+	}
+
+	@Override
+	public void setFocused(boolean v)
+	{
+		super.setFocused(v);
+		meadElement.setElementState(this.visible, this.isHovered, this.isFocused());
 	}
 
 	@Override

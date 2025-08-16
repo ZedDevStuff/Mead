@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
 import org.appliedenergistics.yoga.YogaUnit;
+import org.appliedenergistics.yoga.style.StyleSizeLength;
 
 public class TextMeadWidget extends BasicMeadWidget
 {
@@ -23,12 +24,12 @@ public class TextMeadWidget extends BasicMeadWidget
 		NullUtils.ifNotNull(Minecraft.getInstance(), minecraft ->
 		{
 			this.font = minecraft.font;
-			var width = meadElement.getNode().getWidth();
-			var height = meadElement.getNode().getHeight();
-			if(width.unit == YogaUnit.AUTO)
-				meadElement.getNode().setWidth(font.width(this.getMessage()));
-			if(height.unit == YogaUnit.AUTO)
-				meadElement.getNode().setHeight(font.lineHeight);
+			var width = meadElement.layout().width().get();
+			var height = meadElement.layout().height().get();
+			if(width == StyleSizeLength.AUTO)
+				meadElement.layout().width().set(StyleSizeLength.points(font.width(this.getMessage())));
+			if(height == StyleSizeLength.AUTO)
+				meadElement.layout().height().set(StyleSizeLength.points(font.lineHeight));
 		});
 	}
 
@@ -59,12 +60,12 @@ public class TextMeadWidget extends BasicMeadWidget
 		if(!(meadElement instanceof TextElement textElement))
 			return;
 		Component component = textElement.textProps().text().get();
-		int width = textElement.getLayout().innerWidth;
+		int width = textElement.computedLayout().innerWidth;
 		int fontWidth = font.width(component);
-		int x = textElement.getLayout().innerX + Math.round(this.alignX * (float)(width - fontWidth));
-		int y = textElement.getLayout().innerY + (textElement.getLayout().innerHeight - 9) / 2;
+		int x = textElement.computedLayout().innerX + Math.round(this.alignX * (float)(width - fontWidth));
+		int y = textElement.computedLayout().innerY + (textElement.computedLayout().innerHeight - 9) / 2;
 		FormattedCharSequence formattedCharSequence = fontWidth > width ? this.clipText(component, width) : component.getVisualOrderText();
-		guiGraphics.drawString(this.font, formattedCharSequence, x, y, textElement.colorProps().getTextColor(isActive(), isHovered(), isFocused()));
+		guiGraphics.drawString(this.font, formattedCharSequence, x, y, textElement.getTextColor(isActive(), isHovered(), isFocused()));
 	}
 
 	private FormattedCharSequence clipText(Component component, int i)

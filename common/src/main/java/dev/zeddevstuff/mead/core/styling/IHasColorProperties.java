@@ -1,6 +1,8 @@
 package dev.zeddevstuff.mead.core.styling;
 
+import dev.zeddevstuff.mead.core.ElementState;
 import dev.zeddevstuff.mead.core.data.ObservableProperty;
+import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.core.parsing.IStringParser;
 import dev.zeddevstuff.mead.utils.NullUtils;
 
@@ -9,135 +11,188 @@ import java.util.HashMap;
 public interface IHasColorProperties
 {
 	ColorProperties colorProps();
+	ColorProperties hoverColorProps();
+	ColorProperties activeColorProps();
+	ColorProperties disabledColorProps();
 
 	public class ColorProperties
 	{
 		private final ObservableProperty<Integer> backgroundColor = new ObservableProperty<>(0xFFFFFFFF);
 		public ObservableProperty<Integer> backgroundColor() { return backgroundColor; }
-		private final ObservableProperty<Integer> backgroundHoverColor = new ObservableProperty<>(0xFFCCCCCC);
-		public ObservableProperty<Integer> backgroundHoverColor() { return backgroundHoverColor; }
-		private final ObservableProperty<Integer> backgroundActiveColor = new ObservableProperty<>(0xFFBBBBBB);
-		public ObservableProperty<Integer> backgroundActiveColor() { return backgroundActiveColor; }
-		private final ObservableProperty<Integer> backgroundDisabledColor = new ObservableProperty<>(0xFFAAAAAA);
-		public ObservableProperty<Integer> backgroundDisabledColor() { return backgroundDisabledColor; }
 
 		private final ObservableProperty<Integer> borderColor = new ObservableProperty<>(0xFF000000);
 		public ObservableProperty<Integer> borderColor() { return borderColor; }
-		private final ObservableProperty<Integer> borderHoverColor = new ObservableProperty<>(0xFF888888);
-		public ObservableProperty<Integer> borderHoverColor() { return borderHoverColor; }
-		private final ObservableProperty<Integer> borderActiveColor = new ObservableProperty<>(0xFF777777);
-		public ObservableProperty<Integer> borderActiveColor() { return borderActiveColor; }
-		private final ObservableProperty<Integer> borderDisabledColor = new ObservableProperty<>(0xFF555555);
-		public ObservableProperty<Integer> borderDisabledColor() { return borderDisabledColor; }
 
 		private final ObservableProperty<Integer> textColor = new ObservableProperty<>(0xFFFFFFFF);
 		public ObservableProperty<Integer> textColor() { return textColor; }
-		private final ObservableProperty<Integer> textHoverColor = new ObservableProperty<>(0xFFFFFFFF);
-		public ObservableProperty<Integer> textHoverColor() { return textHoverColor; }
-		private final ObservableProperty<Integer> textActiveColor = new ObservableProperty<>(0xFFFFFFFF);
-		public ObservableProperty<Integer> textActiveColor() { return textActiveColor; }
-		private final ObservableProperty<Integer> textDisabledColor = new ObservableProperty<>(0xFFAAAAAA);
-		public ObservableProperty<Integer> textDisabledColor() { return textDisabledColor; }
 
 		private final ObservableProperty<Integer> textShadowColor = new ObservableProperty<>(0xFF000000);
 		public ObservableProperty<Integer> textShadowColor() { return textShadowColor; }
-		private final ObservableProperty<Integer> textShadowHoverColor = new ObservableProperty<>(0xFF000000);
-		public ObservableProperty<Integer> textShadowHoverColor() { return textShadowHoverColor; }
-		private final ObservableProperty<Integer> textShadowActiveColor = new ObservableProperty<>(0xFF000000);
-		public ObservableProperty<Integer> textShadowActiveColor() { return textShadowActiveColor; }
-		private final ObservableProperty<Integer> textShadowDisabledColor = new ObservableProperty<>(0xFFAAAAAA);
-		public ObservableProperty<Integer> textShadowDisabledColor() { return textShadowDisabledColor; }
-
-
-
-
-		public int getBackgroundColor(boolean isEnabled, boolean isHovered, boolean isFocused)
-		{
-			if (!isEnabled) return backgroundDisabledColor.get();
-			if(isFocused) return backgroundActiveColor.get();
-			if (isHovered) return backgroundHoverColor.get();
-			return backgroundColor.get();
-		}
-
-		public int getBorderColor(boolean isEnabled, boolean isHovered, boolean isFocused)
-		{
-			if (!isEnabled) return borderDisabledColor.get();
-			if(isFocused) return borderActiveColor.get();
-			if (isHovered) return borderHoverColor.get();
-			return borderColor.get();
-		}
-
-		public int getTextColor(boolean isEnabled, boolean isHovered, boolean isFocused)
-		{
-			if (!isEnabled) return textDisabledColor.get();
-			if(isFocused) return textActiveColor.get();
-			if (isHovered) return textHoverColor.get();
-			return textColor.get();
-		}
-
-		public int getTextShadowColor(boolean isEnabled, boolean isHovered, boolean isFocused)
-		{
-			if (!isEnabled) return textShadowDisabledColor.get();
-			if(isFocused) return textShadowActiveColor.get();
-			if (isHovered) return textShadowHoverColor.get();
-			return textShadowColor.get();
-		}
 
 	}
 
 	static void applyAttributes(IHasColorProperties element, HashMap<String, String> attributes)
 	{
 		if (attributes == null || element == null) return;
-		NullUtils.ifNotNull(attributes.get("backgroundColor"), color -> {
+		NullUtils.ifNotNull(attributes.get("background-color"), color -> {
 			element.colorProps().backgroundColor.set(IStringParser.COLOR_PARSER.parse(color));
 		});
-		NullUtils.ifNotNull(attributes.get("backgroundHoverColor"), color -> {
-			element.colorProps().backgroundHoverColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("backgroundActiveColor"), color -> {
-			element.colorProps().backgroundActiveColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("backgroundDisabledColor"), color -> {
-			element.colorProps().backgroundDisabledColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
 
-		NullUtils.ifNotNull(attributes.get("borderColor"), color -> {
+		NullUtils.ifNotNull(attributes.get("border-color"), color -> {
 			element.colorProps().borderColor.set(IStringParser.COLOR_PARSER.parse(color));
 		});
-		NullUtils.ifNotNull(attributes.get("borderHoverColor"), color -> {
-			element.colorProps().borderHoverColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("borderActiveColor"), color -> {
-			element.colorProps().borderActiveColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("borderDisabledColor"), color -> {
-			element.colorProps().borderDisabledColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
 
-		NullUtils.ifNotNull(attributes.get("textColor"), color -> {
+		NullUtils.ifNotNull(attributes.get("text-color"), color -> {
 			element.colorProps().textColor.set(IStringParser.COLOR_PARSER.parse(color));
 		});
-		NullUtils.ifNotNull(attributes.get("textHoverColor"), color -> {
-			element.colorProps().textHoverColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("textActiveColor"), color -> {
-			element.colorProps().textActiveColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("textDisabledColor"), color -> {
-			element.colorProps().textDisabledColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
 
-		NullUtils.ifNotNull(attributes.get("textShadowColor"), color -> {
+		NullUtils.ifNotNull(attributes.get("text-shadow-color"), color -> {
 			element.colorProps().textShadowColor.set(IStringParser.COLOR_PARSER.parse(color));
 		});
-		NullUtils.ifNotNull(attributes.get("textShadowHoverColor"), color -> {
-			element.colorProps().textShadowHoverColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("textShadowActiveColor"), color -> {
-			element.colorProps().textShadowActiveColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
-		NullUtils.ifNotNull(attributes.get("textShadowDisabledColor"), color -> {
-			element.colorProps().textShadowDisabledColor.set(IStringParser.COLOR_PARSER.parse(color));
-		});
+	}
+
+	static void applyStyleRule(MeadStyleRule rule, MeadStyleRule.MeadStyleProperty prop, MeadElement target)
+	{
+		if(target instanceof IHasColorProperties el)
+		{
+			var colors = switch (rule.state)
+			{
+				case NORMAL -> el.colorProps();
+				case HOVER -> el.hoverColorProps();
+				case ACTIVE -> el.activeColorProps();
+				case DISABLED -> el.disabledColorProps();
+			};
+			switch (prop.name())
+			{
+				case "background-color" ->
+				{
+					colors.backgroundColor()
+						.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					if(rule.state == ElementState.NORMAL)
+					{
+						el.hoverColorProps().backgroundColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.activeColorProps().backgroundColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.disabledColorProps().backgroundColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					}
+				}
+				case "border-color" ->
+				{
+					colors.borderColor()
+						.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					if(rule.state == ElementState.NORMAL)
+					{
+						el.hoverColorProps().borderColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.activeColorProps().borderColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.disabledColorProps().borderColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					}
+				}
+				case "color" ->
+				{
+					colors.textColor()
+						.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					if(rule.state == ElementState.NORMAL)
+					{
+						el.hoverColorProps().textColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.activeColorProps().textColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.disabledColorProps().textColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					}
+				}
+				case "text-shadow" ->
+				{
+					colors.textShadowColor()
+						.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					if(rule.state == ElementState.NORMAL)
+					{
+						el.hoverColorProps().textShadowColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.activeColorProps().textShadowColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+						el.disabledColorProps().textShadowColor()
+							.set(IStringParser.COLOR_PARSER.parse(prop.value()));
+					}
+				}
+			}
+		}
+	}
+
+	default int getBackgroundColor(boolean isEnabled, boolean isHovered, boolean isFocused)
+	{
+		if (!isEnabled) return disabledColorProps().backgroundColor.get();
+		if(isFocused) return activeColorProps().backgroundColor.get();
+		if (isHovered) return hoverColorProps().backgroundColor.get();
+		return colorProps().backgroundColor.get();
+	}
+	default int getBackgroundColor(ElementState state)
+	{
+		return switch (state)
+		{
+			case NORMAL -> colorProps().backgroundColor.get();
+			case HOVER -> hoverColorProps().backgroundColor.get();
+			case ACTIVE -> activeColorProps().backgroundColor.get();
+			case DISABLED -> disabledColorProps().backgroundColor.get();
+		};
+	}
+
+	default int getBorderColor(boolean isEnabled, boolean isHovered, boolean isFocused)
+	{
+		if (!isEnabled) return disabledColorProps().borderColor.get();
+		if(isFocused) return activeColorProps().borderColor.get();
+		if (isHovered) return hoverColorProps().borderColor.get();
+		return colorProps().borderColor.get();
+	}
+	default int getBorderColor(ElementState state)
+	{
+		return switch (state)
+		{
+			case NORMAL -> colorProps().borderColor.get();
+			case HOVER -> hoverColorProps().borderColor.get();
+			case ACTIVE -> activeColorProps().borderColor.get();
+			case DISABLED -> disabledColorProps().borderColor.get();
+		};
+	}
+
+	default int getTextColor(boolean isEnabled, boolean isHovered, boolean isFocused)
+	{
+		if (!isEnabled) return disabledColorProps().textColor.get();
+		if(isFocused) return activeColorProps().textColor.get();
+		if (isHovered) return hoverColorProps().textColor.get();
+		return colorProps().backgroundColor.get();
+	}
+	default int getTextColor(ElementState state)
+	{
+		return switch (state)
+		{
+			case NORMAL -> colorProps().textColor.get();
+			case HOVER -> hoverColorProps().textColor.get();
+			case ACTIVE -> activeColorProps().textColor.get();
+			case DISABLED -> disabledColorProps().textColor.get();
+		};
+	}
+
+	default int getTextShadowColor(boolean isEnabled, boolean isHovered, boolean isFocused)
+	{
+		if (!isEnabled) return disabledColorProps().textShadowColor.get();
+		if(isFocused) return activeColorProps().textShadowColor.get();
+		if (isHovered) return hoverColorProps().textShadowColor.get();
+		return colorProps().backgroundColor.get();
+	}
+	default int getTextShadowColor(ElementState state)
+	{
+		return switch (state)
+		{
+			case NORMAL -> colorProps().textShadowColor.get();
+			case HOVER -> hoverColorProps().textShadowColor.get();
+			case ACTIVE -> activeColorProps().textShadowColor.get();
+			case DISABLED -> disabledColorProps().textShadowColor.get();
+		};
 	}
 }

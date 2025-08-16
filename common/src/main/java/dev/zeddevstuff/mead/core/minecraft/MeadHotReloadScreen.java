@@ -26,7 +26,6 @@ public class MeadHotReloadScreen extends Screen
 	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(MeadHotReloadScreen.class);
 	private final Path screenPath;
 
-	private HashMap<String, Property<?>> variables = new HashMap<>();
 	private HashMap<String, Callable<?>> actions = new HashMap<>();
 
 	public MeadHotReloadScreen(Path screen, MeadContext ctx)
@@ -39,19 +38,17 @@ public class MeadHotReloadScreen extends Screen
 		{
 			var intermediary = MeadParser.parse(tryReadResource(screen));
             intermediary.ifPresentOrElse(
-				intermediaryDOM -> this.dom = new MeadDOM(intermediaryDOM.build(ctx, null, null)),
+				intermediaryDOM -> this.dom = new MeadDOM(intermediaryDOM.build(ctx, null)),
 				() -> this.dom = new MeadDOM(null));
 		}
 		else LOGGER.error("Mead file does not exist: {}", screen);
 		end = System.nanoTime();
         LOGGER.info("Created MeadFileScreen from file '{}' in {}ms", screen, getCreationTimeMillis());
 	}
-	public MeadHotReloadScreen(Path screen, MeadContext ctx, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions) throws IOException
+	public MeadHotReloadScreen(Path screen, MeadContext ctx, HashMap<String, Callable<?>> actions) throws IOException
 	{
 		super(Component.literal("MeadScreen"));
 		this.ctx = ctx;
-		if(variables != null)
-			this.variables = variables;
 		if(actions != null)
 			this.actions = actions;
 		screenPath = screen;
@@ -59,7 +56,7 @@ public class MeadHotReloadScreen extends Screen
 		if(screen.toFile().exists())
 		{
 			var intermediary = MeadParser.parse(tryReadResource(screen));
-            this.dom = intermediary.map(intermediaryDOM -> new MeadDOM(intermediaryDOM.build(ctx, variables, actions))).orElseGet(() -> new MeadDOM(null));
+            this.dom = intermediary.map(intermediaryDOM -> new MeadDOM(intermediaryDOM.build(ctx, actions))).orElseGet(() -> new MeadDOM(null));
 		}
 		else LOGGER.error("Mead file does not exist: {}", screen);
 		end = System.nanoTime();
@@ -77,7 +74,7 @@ public class MeadHotReloadScreen extends Screen
 	public void reload()
 	{
 		var intermediary = MeadParser.parse(tryReadResource(screenPath));
-        intermediary.ifPresent(intermediaryDOM -> this.dom = new MeadDOM(intermediaryDOM.build(ctx, variables, actions)));
+        intermediary.ifPresent(intermediaryDOM -> this.dom = new MeadDOM(intermediaryDOM.build(ctx, actions)));
 	}
 
 	@Override

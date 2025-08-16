@@ -3,6 +3,7 @@ package dev.zeddevstuff.mead.core;
 import dev.zeddevstuff.mead.core.elements.MeadElement;
 import dev.zeddevstuff.mead.core.styling.IHasFlavorProperty;
 import dev.zeddevstuff.mead.utils.NullUtils;
+import org.appliedenergistics.yoga.style.StyleSizeLength;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,8 @@ public class MeadDOM
 		if (root != null)
 		{
 			this.root = root;
-			root.getNode().setWidth(width);
-			root.getNode().setHeight(height);
+			root.layout().width().set(StyleSizeLength.points(width));
+			root.layout().height().set(StyleSizeLength.points(height));
 		}
 	}
 	public void setFlavor(ElementFlavor flavor)
@@ -44,8 +45,8 @@ public class MeadDOM
 		this.width = width;
 		this.height = height;
 		NullUtils.ifNotNull(root, rootNode -> {
-			root.getNode().setWidth(width);
-			root.getNode().setHeight(height);
+			root.layout().width().set(StyleSizeLength.points(width));
+			root.layout().height().set(StyleSizeLength.points(height));
 		});
 	}
 

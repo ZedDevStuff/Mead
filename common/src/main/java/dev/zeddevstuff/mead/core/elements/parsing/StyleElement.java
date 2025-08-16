@@ -19,28 +19,12 @@ public class StyleElement extends MeadElement implements IParsingCompleteListene
     private final Logger logger = LogUtils.getLogger();
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<MeadStyle> style = Optional.empty();
-    private String src;
-
-    public void setSrc(String src)
-    {
-        if(textContent.<String>get().isBlank())
-        {
-            this.src = src;
-            style = getCtx().getStyleSheet(src);
-            style.ifPresent(meadStyle -> meadStyle.applyToTree(getRoot()));
-        }
-        else
-        {
-            logger.warn("Style element with src '{}' has text content, ignoring src attribute.", src);
-        }
-    }
 
     @Override
     public String getTagName() { return "null"; }
-    public StyleElement(HashMap<String, String> attributes, HashMap<String, Property<?>> variables, HashMap<String, Callable<?>> actions, @NotNull String textContent)
+    public StyleElement(HashMap<String, String> attributes, HashMap<String, Callable<?>> actions, @NotNull String textContent)
     {
-        super(null, null, null, textContent);
-        NullUtils.ifNotNull(attributes.get("src"), value -> src = value);
+        super(null, null, textContent);
     }
 
     public Optional<MeadStyle> get() { return style; }
@@ -50,15 +34,7 @@ public class StyleElement extends MeadElement implements IParsingCompleteListene
 
     public void parsingComplete()
     {
-        if(textContent.<String>get().isBlank())
-        {
-            if(!src.isBlank())
-                setSrc(src);
-        }
-        else
-        {
-            style = MeadStyleSheetsParser.parse(ctx, textContent.get());
-            style.ifPresent(meadStyle -> meadStyle.applyToTree(getRoot()));
-        }
+        style = MeadStyleSheetsParser.parse(ctx, textContent.get());
+        style.ifPresent(meadStyle -> meadStyle.applyToTree(getRoot()));
     }
 }

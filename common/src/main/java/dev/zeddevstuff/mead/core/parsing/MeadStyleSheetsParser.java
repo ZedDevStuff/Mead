@@ -1,5 +1,6 @@
 package dev.zeddevstuff.mead.core.parsing;
 
+import dev.zeddevstuff.mead.core.ElementState;
 import dev.zeddevstuff.mead.core.MeadContext;
 import dev.zeddevstuff.mead.core.styling.MeadStyle;
 import dev.zeddevstuff.mead.core.styling.MeadStyleRule;
@@ -13,9 +14,9 @@ import java.util.regex.Pattern;
 
 public class MeadStyleSheetsParser
 {
-    private final static Pattern COMMENT_PATTERN = Pattern.compile("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/", Pattern.DOTALL);
-    private final static Pattern NEWLINE_PATTERN = Pattern.compile("\\r?\\n");
-    private final static Pattern RULE_PATTERN = Pattern.compile("(?<rule>\\.?[^ \\r\\s]+)\\s*\\{(?<content>(?:[\\r\\n]|[^}]*)*)}", Pattern.DOTALL);
+    public final static Pattern COMMENT_PATTERN = Pattern.compile("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/", Pattern.DOTALL);
+    public final static Pattern NEWLINE_PATTERN = Pattern.compile("\\r?\\n");
+    public final static Pattern RULE_PATTERN = Pattern.compile("(?<rule>\\.?[^ \\r\\s]+)\\s*\\{(?<content>(?:[\\r\\n]|[^}]*)*)}", Pattern.DOTALL);
 
     public static Optional<MeadStyle> parse(MeadContext ctx, String styleSheet)
     {
@@ -28,9 +29,26 @@ public class MeadStyleSheetsParser
             String ruleName = rule.getA();
             String ruleContent = rule.getB();
             String[] properties = extractProperties(ruleContent);
+            var targetType = ruleName.startsWith(".") ? MeadStyleRule.TargetType.STYLE : MeadStyleRule.TargetType.TAG;
+            var targetName = ruleName.startsWith(".") ? ruleName.substring(1) : ruleName;
+            var targetState = ElementState.NORMAL;
+            if(ruleName.contains(":"))
+            {
+                String[] parts = ruleName.split(":");
+                if(parts.length != 2)
+                    throw new IllegalArgumentException("Invalid rule name format: " + ruleName);
+                targetName = parts[0].trim();
+                targetState = switch (parts[1].trim().toUpperCase()) {
+                    case "HOVER" -> ElementState.HOVER;
+                    case "ACTIVE" -> ElementState.ACTIVE;
+                    case "DISABLED" -> ElementState.DISABLED;
+                    default -> ElementState.NORMAL;
+                };
+            }
             MeadStyleRule styleRule = new MeadStyleRule(
-                ruleName.startsWith(".") ? MeadStyleRule.TargetType.STYLE : MeadStyleRule.TargetType.TAG,
-                ruleName.startsWith(".") ? ruleName.substring(1) : ruleName,
+                targetType,
+                targetName,
+                targetState,
                 Arrays.stream(properties)
                     .map(prop -> {
                         String[] parts = prop.split(":");

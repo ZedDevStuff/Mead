@@ -1,10 +1,18 @@
+
+
+button:hover {
+    background-color: #e6873a;
+    border-color: #f97316;
+}
+
+button:active {
+    background-color: #e6873a;
+    border-color: #f97316;
+}
+
 button {
-    boxSizing: border;
-    backgroundColor: #fb923c;
-    backgroundHoverColor: #e6873a;
-    backgroundActiveColor: #e6873a;
+    box-sizing: border;
+    background-color: #fb923c;
     border: 1;
-    borderColor: #f97316;
-    borderHoverColor: #f97316;
-    borderActiveColor: #f97316;
+    border-color: #f97316;
 }

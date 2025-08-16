@@ -6,14 +6,14 @@ import dev.zeddevstuff.mead.core.parsing.IStringParser;
 public class FlavorStylePropertyApplier implements IMeadStylePropertyApplier
 {
     @Override
-    public void applyStyleProperty(MeadStyleRule.MeadStyleProperty rule, MeadElement target)
+    public void applyStyleProperty(MeadStyleRule rule, MeadStyleRule.MeadStyleProperty property, MeadElement target)
     {
         if(target instanceof IHasFlavorProperty el)
         {
-            if("flavor".equals(rule.name()))
+            if("flavor".equals(property.name()))
             {
                 if(el.flavor().wasModifiedOnceAfterCreation()) return;
-                el.flavor().set(IStringParser.FLAVOR_PARSER.parse(rule.value()));
+                el.flavor().set(IStringParser.FLAVOR_PARSER.parse(property.value()));
             }
         }
     }

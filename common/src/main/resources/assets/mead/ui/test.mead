@@ -1,13 +1,29 @@
 <Mead flavor="styled">
-    <Style src="style/mead.mss" />
-    <Rect width="100%" height="100%" backgroundColor="#fff">
-        <Rect width="100%" height="20" flexDirection="row-reverse" backgroundColor="#f88">
+    <Import src="style/mead.mss" />
+    <Import src="style/moss.mss" />
+    <Rect class="size-full">
+        <Rect class="width-full" height="20" flex-direction="row-reverse" background-color="#f88">
             <Button width="20" height="20" action="exitScreen">x</Button>
             <Button width="20" height="20">i</Button>
         </Rect>
-        <Rect width="100%" flexGrow="1" flexDirection="row" backgroundColor="#88f">
-            <Rect width="20%" height="100%" backgroundColor="#8f8"/>
+        <Rect width="100%" flex-grow="1" flex-direction="row" background-color="#88f">
+            <Rect width="20%" height="100%" background-color="#8f8"/>
             <Button action="sayHello">Click me</Button>
         </Rect>
     </Rect>
 </Mead>
+<!-- 
+<html flavor="styled">
+    <import src="style/mead.mss" />
+    <import src="style/moss.mss" />
+    <div class="size-full">
+        <div class="width-full" height="20" flex-direction="row-reverse" background-color="#f88">
+            <button width="20" height="20" action="exitScreen">x</button>
+            <button width="20" height="20">i</button>
+        </div>
+        <div width="100%" flex-grow="1" flex-direction="row" background-color="#88f">
+            <div width="20%" height="100%" background-color="#8f8"/>
+            <button action="sayHello">Click me</button>
+        </div>
+    </div>
+</html> -->
